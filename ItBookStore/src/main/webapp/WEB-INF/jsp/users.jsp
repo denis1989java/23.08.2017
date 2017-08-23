@@ -131,11 +131,10 @@
                             <th style="color: #FFFFFF">Login</th>
                             <th style="color: #FFFFFF">Role</th>
                             <th style="color: #FFFFFF">Status</th>
-                            <th style="color: #FFFFFF"><input value="${userDTO.userId}" name="deleting" type="submit"
-                                                              style="text-align:left"></th>
                             <th style="color: #FFFFFF">Change role</th>
                             <th style="color: #FFFFFF">Change status</th>
-
+                            <th><input name="delete" type="submit"
+                                       value="delete" style="text-align:left"></th>
                         </tr>
                         <c:forEach var="userDTO" items="${users}">
                             <tr>
@@ -143,20 +142,16 @@
                                 <td style="color: #FFFFFF"><c:out value="${userDTO.userEmail}"/></td>
                                 <td style="color: #FFFFFF"><c:out value="${userDTO.userRole}"/></td>
                                 <td style="color: #FFFFFF"><c:out value="${userDTO.userStatus}"/></td>
-                                <td><input style="text-align:left; width: 3vw;height: 3vh;border-radius: 10px"
-                                           maxlength="2" name="deleting" value="${userDTO.userId}"
-                                           type="checkbox"/>
-                                </td>
                                 <td>
                                     <form method="get" action="/superAdmin/changeRole">
                                         <select name="userRole">
                                             <option value="USER">USER</option>
                                             <option value="ADMIN">ADMIN</option>
                                             <option value="SUPER_ADMIN">SUPER_ADMIN</option>
-                                            <input type="hidden" name="userId" value="${userDTO.userId}"/>
-                                            <input name="changeRole" value="change" type="submit"
-                                                   style="text-align:left"/>
                                         </select>
+                                        <input type="hidden" name="userId" value="${userDTO.userId}"/>
+                                        <input name="changeRole" value="change" type="submit"
+                                               style="text-align:left"/>
                                     </form>
                                 </td>
                                 <td>
@@ -170,7 +165,10 @@
                                         </select>
                                     </form>
                                 </td>
-
+                                <td><input style="text-align:left; width: 3vw;height: 3vh;border-radius: 10px"
+                                           maxlength="2" name="deleting" value="${userDTO.userId}"
+                                           type="checkbox"/>
+                                </td>
                             </tr>
                         </c:forEach>
                     </table>

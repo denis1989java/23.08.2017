@@ -118,25 +118,26 @@
                                     <th style="color: #FFFFFF">Quantity</th>
                                     <th style="color: #FFFFFF">Price</th>
                                     <th style="color: #FFFFFF">Change Quantity</th>
-                                    <th> <input value="delete" name="delete" type="submit"
-                                                                      style="text-align:left"></th>
+                                    <th><input name="delete" type="submit"
+                                               value="delete" style="text-align:left"></th>
                                 </tr>
                                 <c:forEach var="basketDTO" items="${basket}" varStatus="status">
                                     <tr>
                                         <td style="color: #FFFFFF"><c:out value="${status.count}"/></td>
                                         <td style="color: #FFFFFF"><c:out value="${basketDTO.bookName}"/></td>
-                                        <td style="color: #FFFFFF"><c:out
-                                                value="${basketDTO.bookQuantity}"/></td>
+                                        <td style="color: #FFFFFF"><c:out value="${basketDTO.bookQuantity}"/></td>
                                         <td style="color: #FFFFFF"><c:out value="${basketDTO.bookPrice}"/></td>
-                                        <td><form method="post" action="/user/basket/changeQuantity">
-                                            <input size="1" name="bookQuantity" style="text-align:center;"
-                                                   maxlength="2"
-                                                   pattern="[1-9][0-9]||[1-9]" type="text">
-                                            <input type="hidden" name="basketId"
-                                                   value="${basketDTO.basketId}">
-                                            <input name="change" value="change" type="submit"
-                                                   style="text-align:left">
-                                        </form></td>
+                                        <td>
+                                            <form method="post" action="/user/basket/changeQuantity">
+                                                <input size="1" name="bookQuantity" style="text-align:center;"
+                                                       maxlength="2"
+                                                       pattern="[1-9][0-9]||[1-9]" type="text">
+                                                <input type="hidden" name="basketId"
+                                                       value="${basketDTO.basketId}">
+                                                <input name="change" value="change" type="submit"
+                                                       style="text-align:left">
+                                            </form>
+                                        </td>
                                         <td><input style="text-align:left; width: 3vw;height: 3vh;border-radius: 10px"
                                                    maxlength="2" name="deleting" value="${basketDTO.basketId}"
                                                    type="checkbox">
