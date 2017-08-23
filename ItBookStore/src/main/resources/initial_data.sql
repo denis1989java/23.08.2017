@@ -1,0 +1,16 @@
+INSERT INTO T_USER (F_USER_ID, F_USER_EMAIL, F_USER_PASSWORD, F_USER_ROLE, F_USER_STATUS) VALUES (1, "user@mail.ru","$2a$04$2ioJqDcRqnm4iGNYG/LIqeZQeLMCiHENI4iqeZrMnLbgwfisTsa7K",'USER','ACTIVE');
+INSERT INTO T_USER_INFORMATION (f_user_id, F_USER_NAME, F_USER_SURNAME, F_USER_SECOND_NAME, F_USER_ADDRESS, F_USER_PHONE_NUMBER, F_USER_ADDITIONAL_INFO) VALUES (1,"user","monich","urevich","sharangovicha","+375296522540","no info");
+INSERT INTO T_USER (F_USER_ID, F_USER_EMAIL, F_USER_PASSWORD, F_USER_ROLE, F_USER_STATUS) VALUES (2, "admin@mail.ru","$2a$04$/LrtQPk9i5SmQoAybvPr5uOdiDg3.SCwsLhsCLPX7PRJvFWeqLuFG",'ADMIN','ACTIVE');
+INSERT INTO T_USER_INFORMATION (f_user_id, F_USER_NAME, F_USER_SURNAME, F_USER_SECOND_NAME, F_USER_ADDRESS, F_USER_PHONE_NUMBER, F_USER_ADDITIONAL_INFO) VALUES (2,"admin","monich","urevich","sharangovicha","+375296522540","no info");
+INSERT INTO T_USER (F_USER_ID, F_USER_EMAIL, F_USER_PASSWORD, F_USER_ROLE, F_USER_STATUS) VALUES (3, "superAdmin@mail.ru","$2a$04$mE4f5TbYWH4ZypL.Ar6tD.FoJMTAZOLJnMuqt42sI3M153mMqoGEu",'SUPER_ADMIN','ACTIVE');
+INSERT INTO T_USER_INFORMATION (f_user_id, F_USER_NAME, F_USER_SURNAME, F_USER_SECOND_NAME, F_USER_ADDRESS, F_USER_PHONE_NUMBER, F_USER_ADDITIONAL_INFO) VALUES (3,"superAdmin","monich","urevich","sharangovicha","+375296522540","no info");
+INSERT INTO t_news(F_NEWS_ID, F_NEWS_DATE, F_NEWS_NAME,F_NEWS_TEXT)VALUES(1,"12.12.23","dfssdfdsfdsfdsfdsf","sfewfwefefewfewfewfewf");
+INSERT INTO t_news(F_NEWS_ID, F_NEWS_DATE, F_NEWS_NAME,F_NEWS_TEXT)VALUES(2,"12.12.23","dfssdfdsfdsfdsfdsf","sfewfwefefewfewfewfewf");
+INSERT INTO t_news(F_NEWS_ID, F_NEWS_DATE, F_NEWS_NAME,F_NEWS_TEXT)VALUES(3,"12.12.23","dfssdfdsfdsfdsfdsf","sfewfwefefewfewfewfewf");
+INSERT INTO t_news(F_NEWS_ID, F_NEWS_DATE, F_NEWS_NAME,F_NEWS_TEXT)VALUES(4,"12.12.23","dfssdfdsfdsfdsfdsf","sfewfwefefewfewfewfewf");
+INSERT INTO t_news(F_NEWS_ID, F_NEWS_DATE, F_NEWS_NAME,F_NEWS_TEXT)VALUES(5,"12.12.23","dfssdfdsfdsfdsfdsf","sfewfwefefewfewfewfewf");
+INSERT INTO t_news(F_NEWS_ID, F_NEWS_DATE, F_NEWS_NAME,F_NEWS_TEXT)VALUES(6,"12.12.23","dfssdfdsfdsfdsfdsf","sfewfwefefewfewfewfewf");
+INSERT INTO t_news(F_NEWS_ID, F_NEWS_DATE, F_NEWS_NAME,F_NEWS_TEXT)VALUES(7,"12.12.23","dfssdfdsfdsfdsfdsf","sfewfwefefewfewfewfewf");
+INSERT INTO t_news(F_NEWS_ID, F_NEWS_DATE, F_NEWS_NAME,F_NEWS_TEXT)VALUES(8,"12.12.23","dfssdfdsfdsfdsfdsf","sfewfwefefewfewfewfewf");
+INSERT INTO t_news(F_NEWS_ID, F_NEWS_DATE, F_NEWS_NAME,F_NEWS_TEXT)VALUES(9,"12.12.23","dfssdfdsfdsfdsfdsf","sfewfwefefewfewfewfewf");
+INSERT INTO t_news(F_NEWS_ID, F_NEWS_DATE, F_NEWS_NAME,F_NEWS_TEXT)VALUES(10,"12.12.23","dfssdfdsfdsfdsfdsf","sfewfwefefewfewfewfewf");

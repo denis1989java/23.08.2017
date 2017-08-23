@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="ru.mail.denis.models.UserInformation" table="T_USER_INFORMATION">
+        <id name="userId" type="java.lang.Integer">
+            <column name="f_user_id"/>
+            <generator class="foreign">
+                <param name="property">user</param>
+            </generator>
+        </id>
+        <property name="userName" type="string">
+            <column name="F_USER_NAME" length="50"/>
+        </property>
+        <property name="userSurname" type="string">
+            <column name="F_USER_SURNAME" length="50"/>
+        </property>
+        <property name="userSecondName" type="string">
+            <column name="F_USER_SECOND_NAME" length="50"/>
+        </property>
+        <property name="userPhoneNumber" type="string">
+            <column name="F_USER_PHONE_NUMBER" length="50"/>
+        </property>
+        <property name="userAddress" type="string">
+            <column name="F_USER_ADDRESS" length="50"/>
+        </property>
+        <property name="userAdditionalInfo" type="string">
+            <column name="F_USER_ADDITIONAL_INFO" length="50"/>
+        </property>
+        <one-to-one name="user" class="ru.mail.denis.models.User" constrained="true"/>
+    </class>
+</hibernate-mapping>

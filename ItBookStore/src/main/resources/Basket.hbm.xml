@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="ru.mail.denis.models.Basket" table="t_basket">
+        <id name="basketId" type="java.lang.Integer">
+            <column name="F_BASKET_BOOK_ID" length="5"/>
+            <generator class="identity"/>
+        </id>
+        <property name="bookId" type="java.lang.Integer">
+            <column name="F_BOOK_ID" length="5"/>
+        </property>
+        <property name="bookQuantity" type="java.lang.Integer">
+            <column name="F_BOOK_QUANTITY" length="10"/>
+        </property>
+        <property name="bookName" type="string">
+            <column name="F_BOOK_NAME" length="45"/>
+        </property>
+        <property name="bookPrice" type="java.lang.Double">
+            <column name="F_BOOK_PRICE"/>
+        </property>
+        <many-to-one name="user" class="ru.mail.denis.models.User">
+            <column name="F_USER_ID"></column>
+        </many-to-one>
+    </class>
+</hibernate-mapping>

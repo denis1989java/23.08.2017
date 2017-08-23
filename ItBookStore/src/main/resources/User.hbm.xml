@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="ru.mail.denis.models.User" table="T_USER">
+        <id name="userId" type="java.lang.Integer">
+            <column name="F_USER_ID" length="5"/>
+            <generator class="identity"/>
+        </id>
+        <property name="userEmail" type="string">
+            <column name="F_USER_EMAIL" length="50" not-null="true" unique="true"/>
+        </property>
+        <property name="userPassword" type="string">
+            <column name="F_USER_PASSWORD" length="200" not-null="true"/>
+        </property>
+        <property name="userRole">
+            <column name="F_USER_ROLE" not-null="true"></column>
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">ru.mail.denis.models.Role</param>
+                <param name="useNamed">true</param>
+            </type>
+        </property>
+        <property name="userStatus">
+            <column name="F_USER_STATUS" not-null="true"></column>
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">ru.mail.denis.models.Status</param>
+                <param name="useNamed">true</param>
+            </type>
+        </property>
+        <one-to-one name="userInformation" class="ru.mail.denis.models.UserInformation"
+                    cascade="save-update"/>
+        <set name="userOrders" table="T_ORDER" cascade="all" inverse="true">
+            <key>
+                <column name="F_USER_ID"></column>
+            </key>
+            <one-to-many class="ru.mail.denis.models.Order"></one-to-many>
+        </set>
+        <set name="userBooks" table="t_basket" cascade="all" inverse="true">
+            <key>
+                <column name="F_USER_ID"></column>
+            </key>
+            <one-to-many class="ru.mail.denis.models.Basket"></one-to-many>
+        </set>
+    </class>
+</hibernate-mapping>

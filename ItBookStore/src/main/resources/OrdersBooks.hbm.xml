@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="ru.mail.denis.models.OrdersBooks" table="T_ORDERS_BOOKS">
+        <id name="ordersBooksId" type="java.lang.Integer">
+            <column name="F_ORDERS_BOOKS_ID" length="10"/>
+            <generator class="identity"/>
+        </id>
+        <property name="bookPrice" type="java.lang.Double">
+            <column name="F_BOOK_PRICE"/>
+        </property>
+        <property name="bookName" type="string">
+            <column name="F_BOOK_NAME"/>
+        </property>
+        <property name="bookQuantity" type="java.lang.Integer">
+            <column name="F_BOOK_QUANTITY"/>
+        </property>
+        <property name="bookId" type="java.lang.Integer">
+            <column name="F_BOOK_ID"/>
+        </property>
+        <many-to-one name="order" class="ru.mail.denis.models.Order">
+            <column name="F_ORDER_ID"></column>
+        </many-to-one>
+    </class>
+</hibernate-mapping>
