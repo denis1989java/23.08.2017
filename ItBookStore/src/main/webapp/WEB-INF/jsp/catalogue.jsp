@@ -100,7 +100,7 @@
                         <a class="nav-link" href="${pageContext.request.contextPath}/user/cabinet">cabinet</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/user/news?page=0">news</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/user/news/0">news</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="${pageContext.request.contextPath}/user/profile">my profile</a>
@@ -120,11 +120,11 @@
                         <a class="nav-link" href="${pageContext.request.contextPath}/admin/cabinet">cabinet</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/admin/news?page=0">news</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/admin/news/0">news</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link"
-                           href="${pageContext.request.contextPath}/admin/allOrders?page=0">Orders</a>
+                           href="${pageContext.request.contextPath}/admin/allOrders/0">Orders</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="${pageContext.request.contextPath}/admin/profile">my profile</a>
@@ -138,14 +138,14 @@
                         <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/cabinet">cabinet</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/users?page=0">users</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/users/0">users</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/news?page=0">news</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/news/0">news</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link"
-                           href="${pageContext.request.contextPath}/superAdmin/allOrders?page=0">Orders</a>
+                           href="${pageContext.request.contextPath}/superAdmin/allOrders/0">Orders</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/profile">my profile</a>
@@ -179,31 +179,14 @@
                                 <td style="color: #FFFFFF"><c:out value="${book.bookPrice}"/></td>
                                 <td style="color: #FFFFFF"><c:out value="${book.bookDescription}"/></td>
                                 <td style="color: #FFFFFF">
-                                    <c:choose>
-                                        <c:when test="${addToOrder eq 0}">
-                                            <form method="post" action="changeOrder">
-                                                <input size="1" name="bookQuantity" style="text-align:center;"
-                                                       maxlength="2"
-                                                       pattern="[1-9]?[0-9]" type="text" required>
-                                                <input type="hidden" name="page" value="${page}">
-                                                <input type="hidden" name="orderId" value="${orderId}">
-                                                <input type="hidden" name="bookId" value="${book.bookId}">
-                                                <input name="addToChangeOrder" value="add to order" type="submit"
-                                                       style="text-align:left">
-                                            </form>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <form method="post" action="/user/addToBasket">
-                                                <input size="1" name="bookQuantity" style="text-align:center;"
-                                                       maxlength="2"
-                                                       pattern="[1-9]?[0-9]" type="text" required>
-                                                <input type="hidden" name="bookId" value="${book.bookId}">
-                                                <input name="addToBasket" value="add to basket" type="submit"
-                                                       style="text-align:left">
-                                            </form>
-                                        </c:otherwise>
-                                    </c:choose>
-
+                                    <form method="post" action="/user/addToBasket">
+                                        <input size="1" name="bookQuantity" style="text-align:center;"
+                                               maxlength="2"
+                                               pattern="[1-9]?[0-9]" type="text" required>
+                                        <input type="hidden" name="bookId" value="${book.bookId}">
+                                        <input name="addToBasket" value="add to basket" type="submit"
+                                               style="text-align:left">
+                                    </form>
                                 </td>
                             </tr>
                         </c:forEach>
@@ -300,22 +283,10 @@
             <div class="col-md-3">
                 <div class="pagination">
                     <security:authorize access="hasAuthority('USER')">
-                        <c:choose>
-                            <c:when test="${addToOrder eq 0}">
-                                <c:forEach var="page" items="${pagination}">
-                                    <li>
-                                        <a href="catalogue/${page}&addToOrder=addToOrder&orderId=${orderId}">${page+1}</a>
-                                    </li>
-                                </c:forEach>
-                            </c:when>
-                            <c:otherwise>
-                                <c:forEach var="page" items="${pagination}">
-                                    <li><a href="catalogue/${page}">${page+1}</a></li>
-                                </c:forEach>
-                            </c:otherwise>
-                        </c:choose>
+                        <c:forEach var="page" items="${pagination}">
+                            <li><a href="${page}">${page+1}</a></li>
+                        </c:forEach>
                     </security:authorize>
-
                     <security:authorize access="hasAuthority('ADMIN') || hasAuthority('SUPER_ADMIN')">
                         <c:forEach var="page" items="${pagination}">
                             <li><a href="${page}">${page+1}</a></li>

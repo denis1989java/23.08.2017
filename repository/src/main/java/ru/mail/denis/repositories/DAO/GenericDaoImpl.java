@@ -6,7 +6,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import ru.mail.denis.repositories.HibernateUtil;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;

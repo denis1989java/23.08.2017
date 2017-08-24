@@ -19,8 +19,6 @@ public interface BasketService {
 
     void changeBookQuantityInBasket(Integer newQuantity, Integer basketId);
 
-    void deleteAllFromBasketByUser(Integer userId);
-
     Integer basketQuantity(Integer userId);
 
     void addToBasket(Integer bookId, UserDTO userDTO, Integer bookQuantity);

@@ -34,5 +34,4 @@ public interface UserService {
 
     void deleteUserDTO(Integer userId);
 
-    User userDTOToUser(UserDTO userDTO);
 }

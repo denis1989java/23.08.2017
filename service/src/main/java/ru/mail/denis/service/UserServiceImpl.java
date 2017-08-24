@@ -14,6 +14,8 @@ import ru.mail.denis.repositories.DAO.UserDAO;
 import ru.mail.denis.repositories.DAO.UserInformationDAO;
 import ru.mail.denis.service.DTOmodels.UserDTO;
 import ru.mail.denis.service.DTOmodels.UserInformationDTO;
+import ru.mail.denis.service.util.UserConverter;
+import ru.mail.denis.service.util.UserInformationConverter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +39,7 @@ public class UserServiceImpl implements UserService {
     public UserDTO getUserDTOByEmail(String email) {
         User user = findByEmail(email);
         if (user != null) {
-            return userToUserDTO(user);
+            return UserConverter.converter(user);
         } else {
             return null;
         }
@@ -49,7 +51,7 @@ public class UserServiceImpl implements UserService {
     public UserInformationDTO getUserinformationDTOByUserId(Integer userId) {
         UserInformation userInformation = getUserInformationByUserId(userId);
         if (userInformation != null) {
-            return userInformationToUserInformationDTO(userInformation);
+            return UserInformationConverter.converter(userInformation);
         } else {
             return null;
         }
@@ -58,19 +60,18 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void addUserDTO(UserDTO userDTO) {
-        User user = userDTOToUser(userDTO);
+        User user = UserConverter.converter(userDTO);
         user.setUserPassword(bCryptPasswordEncoder.encode(userDTO.getUserPassword()));
-        UserInformation userInformation = userInformationDTOToUserInformation(userDTO);
+        UserInformation userInformation = UserInformationConverter.converter(userDTO);
         user.setUserInformation(userInformation);
         userInformation.setUser(user);
-        saveUserInformation(userInformation);
         saveUser(user);
     }
 
     @Override
     @Transactional
     public void updateUserDTO(UserDTO userDTO) {
-        User user = userDTOToUser(userDTO);
+        User user = UserConverter.converter(userDTO);
         user.setUserPassword(bCryptPasswordEncoder.encode(userDTO.getUserPassword()));
         updateUser(user);
     }
@@ -79,33 +80,21 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void updateUserInformationDTO(UserInformationDTO userInformationDTO, Integer userId) {
         UserInformation userInformation = getUserInformationByUserId(userId);
-        userInformation.setUserAddress(userInformationDTO.getUserAddress());
-        userInformation.setUserAdditionalInfo(userInformationDTO.getUserAdditionalInfo());
-        userInformation.setUserSurname(userInformationDTO.getUserSurname());
-        userInformation.setUserPhoneNumber(userInformationDTO.getUserPhoneNumber());
-        userInformation.setUserSecondName(userInformationDTO.getUserSecondName());
-        userInformation.setUserName(userInformationDTO.getUserName());
+        userInformation=UserInformationConverter.setUserInformation(userInformation,userInformationDTO);
         updateUserInformation(userInformation);
     }
 
     @Override
     @Transactional()
     public List<UserDTO> getUsersDTO(int pageId, int total) {
-        List<User> users = getUsersByParts(pageId, total);
-        List<UserDTO> usersDTO = new ArrayList<>();
-        for (User user : users) {
-            UserDTO userDTO = userToUserDTO(user);
-            usersDTO.add(userDTO);
-        }
-        return usersDTO;
+        return UserConverter.converter(getUsersByParts(pageId, total));
     }
 
 
     @Override
     @Transactional()
     public Integer usersDTOQuantity() {
-        Integer quantity=findAll().size();
-        return quantity;
+        return findAll().size();
     }
 
     @Override
@@ -127,8 +116,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional()
     public void deleteUserDTO(Integer userId) {
-        User user = findById(userId);
-        delete(user);
+        delete(findById(userId));
     }
 
 
@@ -162,11 +150,6 @@ public class UserServiceImpl implements UserService {
         userDAO.save(user);
     }
 
-    private void saveUserInformation(UserInformation userInformation) {
-        logger.debug("Saving new UserInformation");
-        userInformationDAO.save(userInformation);
-    }
-
     private void updateUserInformation(UserInformation userInformation) {
         logger.debug("Updating UserInformation");
         userInformationDAO.update(userInformation);
@@ -187,47 +170,5 @@ public class UserServiceImpl implements UserService {
         logger.debug("Finding User by email");
         User user = userDAO.findByEmail(email);
         return user;
-    }
-
-    public UserDTO userToUserDTO(User user) {
-        UserDTO userDTO = new UserDTO();
-        userDTO.setUserPassword(user.getUserPassword());
-        userDTO.setUserEmail(user.getUserEmail());
-        userDTO.setUserStatus(user.getUserStatus());
-        userDTO.setUserRole(user.getUserRole());
-        userDTO.setUserId(user.getUserId());
-        return userDTO;
-    }
-    @Override
-    public User userDTOToUser(UserDTO userDTO) {
-        User user = new User();
-        user.setUserEmail(userDTO.getUserEmail());
-        user.setUserStatus(userDTO.getUserStatus());
-        user.setUserRole(userDTO.getUserRole());
-        user.setUserId(userDTO.getUserId());
-        user.setUserPassword(userDTO.getUserPassword());
-        return user;
-    }
-
-    private UserInformation userInformationDTOToUserInformation(UserDTO userDTO) {
-        UserInformation userInformation = new UserInformation();
-        userInformation.setUserAddress(userDTO.getUserAddress());
-        userInformation.setUserAdditionalInfo(userDTO.getUserAdditionalInfo());
-        userInformation.setUserSurname(userDTO.getUserSurname());
-        userInformation.setUserPhoneNumber(userDTO.getUserPhoneNumber());
-        userInformation.setUserSecondName(userDTO.getUserSecondName());
-        userInformation.setUserName(userDTO.getUserName());
-        return userInformation;
-    }
-
-    private UserInformationDTO userInformationToUserInformationDTO(UserInformation userInformation) {
-        UserInformationDTO userInformationDTO = new UserInformationDTO();
-        userInformationDTO.setUserAdditionalInfo(userInformation.getUserAdditionalInfo());
-        userInformationDTO.setUserAddress(userInformation.getUserAddress());
-        userInformationDTO.setUserName(userInformation.getUserName());
-        userInformationDTO.setUserPhoneNumber(userInformation.getUserPhoneNumber());
-        userInformationDTO.setUserSecondName(userInformation.getUserSecondName());
-        userInformationDTO.setUserSurname(userInformation.getUserSurname());
-        return userInformationDTO;
     }
 }

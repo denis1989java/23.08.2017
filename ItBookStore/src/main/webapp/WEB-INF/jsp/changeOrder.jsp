@@ -76,13 +76,13 @@
         <div class="collapse navbar-collapse" id="navbarExample">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="${pageContext.request.contextPath}/user/news?page=0">news</a>
+                    <a class="nav-link" href="${pageContext.request.contextPath}/user/news/0">news</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="${pageContext.request.contextPath}/user/cabinet">cabinet</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="${pageContext.request.contextPath}/user/catalogue?page=0">catalogue</a>
+                    <a class="nav-link" href="${pageContext.request.contextPath}/user/catalogue/0">catalogue</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="${pageContext.request.contextPath}/user/profile">my profile</a>
@@ -119,20 +119,20 @@
 
                 </table>
                 <c:choose>
-                    <c:when test="${emptyList eq 0}">
+                    <c:when test="${empty OrderBookTimesDTO}">
                         <c:out value="No items in you order"></c:out>
-                        <form action="orders" method="post">
+                        <form action="/user/order/delete" method="post">
                             <input type="hidden" name="orderId" value="${orderDTO.orderId}">
                             <input name="deleteOrder" value="delete order" type="submit" style="text-align:left">
                         </form>
-                        <form action="catalogue?page=1" method="get">
+                        <form action="/user/order/addToOrder/0" method="get">
                             <input type="hidden" name="orderId" value="${orderDTO.orderId}">
-                            <input name="addToOrder" value="Add to order" type="submit" style="text-align:left">
+                            <input value="Add to order" type="submit" style="text-align:left">
                         </form>
                     </c:when>
                     <c:otherwise>
                         <c:out value="Order Details"></c:out>
-                        <form action="changeOrder" method="post">
+                        <form action="/user/order/deleteBook?orderId=${orderDTO.orderId}" method="post">
                             <table>
                                 <tr>
                                     <th style="color: #FFFFFF">Book name</th>
@@ -150,17 +150,19 @@
                                         <td style="color: #FFFFFF"><c:out
                                                 value="${ordersBooksDTO.bookQuantity}"/></td>
                                         <td>
-                                            <form method="post" action="changeOrder">
+                                            <form>
+                                            </form>
+                                            <form method="post" action="/user/order/changeBookQuantity">
                                                 <input size="1" name="bookQuantity" style="text-align:center;" maxlength="2"
                                                        pattern="[1-9][0-9]||[1-9]" type="text">
                                                 <input type="hidden" name="orderId" value="${orderDTO.orderId}">
-                                                <input type="hidden" name="ordersBooksId"
+                                                <input type="hidden" name="ordersBooksTimesId"
                                                        value="${ordersBooksDTO.ordersBooksTimesId}">
                                                 <input name="change" value="change" type="submit"
                                                        style="text-align:left">
                                             </form>
                                         </td>
-                                        <td><input type="hidden" name="orderId" value="${orderDTO.orderId}">
+                                        <td>
                                             <input style="text-align:left; width: 3vw;height: 3vh;border-radius: 10px"
                                                    maxlength="2" name="deleting"
                                                    value="${ordersBooksDTO.ordersBooksTimesId}" type="checkbox"></td>
@@ -173,7 +175,7 @@
                                 <tr>
                                     <th style="color: #FFFFFF"><p>Summ: <c:out value="${summ}"></c:out></p></th>
                                     <th>
-                                        <form action="orders" method="post">
+                                        <form action="/user/order/save" method="post">
                                             <input type="hidden" name="orderId" value="${orderDTO.orderId}">
                                             <input value="${summ}" name="fullPrice" type="hidden">
                                             <input name="save" value="save" type="submit" style="text-align:left">
@@ -181,11 +183,11 @@
                                     </th>
                                 </tr>
                             </table>
-                            <form action="catalogue?page=1" method="get">
+                            <form action="/user/order/addToOrder/0" method="get">
                                 <input type="hidden" name="orderId" value="${orderDTO.orderId}">
-                                <input name="addToOrder" value="Add to order" type="submit" style="text-align:left">
+                                <input value="Add to order" type="submit" style="text-align:left">
                             </form>
-                            <form action="orders" method="post">
+                            <form action="/user/order/delete" method="post">
                                 <input type="hidden" name="orderId" value="${orderDTO.orderId}">
                                 <input name="deleteOrder" value="delete order" type="submit" style="text-align:left">
                             </form>

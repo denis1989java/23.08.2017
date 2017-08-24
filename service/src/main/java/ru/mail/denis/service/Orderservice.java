@@ -1,5 +1,6 @@
 package ru.mail.denis.service;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.mail.denis.models.Delivery;
 import ru.mail.denis.models.OrdersBooks;
 import ru.mail.denis.service.DTOmodels.*;
@@ -11,9 +12,11 @@ import java.util.List;
  */
 public interface Orderservice {
 
-    void insertToOrders(List<BasketDTO> baskets, UserDTO userDTO, Double orderPrice);
 
-    List<OrderDTO> getOrdersByUser(Integer userId);
+    void addOrder(String userEmail, Double fullPrice);
+
+
+    List<OrderDTO> getOrdersByUser(String userEmail);
 
     List<OrderDTO> getOrders(int pageId, int total);
 
@@ -33,7 +36,7 @@ public interface Orderservice {
 
     void updateQuantityInOrderBooksTimes(Integer bookId, Integer orderId, Integer quantity);
 
-    void insertToOrdersBooksTimes(BookDTO bookDTO, Integer orderId);
+    void addOrderBookTimes(Integer bookid, Integer orderId, Integer bookQuantity);
 
     void updateOrderAndOrdersBooks(Integer orderId, Double fullPrice);
 
@@ -41,7 +44,7 @@ public interface Orderservice {
 
     List<OrdersBooksDTO> getOrderBooksDTOByBookId(Integer bookId);
 
-    void updateOrderDeliveryStatus(Delivery delivery, Integer orderId);
+    void updateOrderDeliveryStatus(String deliveryStatus, Integer orderId);
 
     Integer orderQuantity();
 }

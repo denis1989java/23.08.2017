@@ -7,11 +7,14 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.mail.denis.models.Basket;
 import ru.mail.denis.models.User;
 import ru.mail.denis.repositories.DAO.BasketDAO;
+import ru.mail.denis.repositories.DAO.CatalogueDAO;
 import ru.mail.denis.service.DTOmodels.BasketDTO;
 import ru.mail.denis.service.DTOmodels.BookDTO;
 import ru.mail.denis.service.DTOmodels.UserDTO;
+import ru.mail.denis.service.util.BasketConverter;
+import ru.mail.denis.service.util.BookConverter;
+import ru.mail.denis.service.util.UserConverter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -21,17 +24,14 @@ import java.util.List;
 @Service
 public class BasketServiceImpl implements BasketService {
     private final BasketDAO basketDAO;
-    private final CatalogueService catalogueService;
-    private final UserService userService;
+    private final CatalogueDAO catalogueDAO;
     private static final Logger logger = Logger.getLogger(BasketServiceImpl.class);
     @Autowired
     public BasketServiceImpl(
             BasketDAO basketDAO,
-            CatalogueService catalogueService, UserService userService
-    ) {
+            CatalogueDAO catalogueDAO) {
         this.basketDAO = basketDAO;
-        this.catalogueService = catalogueService;
-        this.userService = userService;
+        this.catalogueDAO = catalogueDAO;
     }
 
 
@@ -39,20 +39,13 @@ public class BasketServiceImpl implements BasketService {
     @Override
     @Transactional
     public List<BasketDTO> getBooksFromBasketByUser(Integer userId) {
-        List<Basket> baskets = getBasketByUserId(userId);
-        List<BasketDTO> basketDTOS = new ArrayList<>();
-        for (Basket basket : baskets) {
-            BasketDTO basketDTO = basketToBasketDTO(basket);
-            basketDTOS.add(basketDTO);
-        }
-        return basketDTOS;
+        return BasketConverter.converter(getBasketByUserId(userId));
     }
 
     @Override
     @Transactional
     public void deleteBookFromBasker(Integer basketId) {
-        Basket basket = findById(basketId);
-        delete(basket);
+        delete(findById(basketId));
     }
 
     @Override
@@ -65,18 +58,10 @@ public class BasketServiceImpl implements BasketService {
 
     @Override
     @Transactional
-    public void deleteAllFromBasketByUser(Integer userId) {
-        List<Basket> baskets = getBasketByUserId(userId);
-        for (Basket basket : baskets) {
-            delete(basket);
-        }
-    }
-    @Override
-    @Transactional
     public Integer basketQuantity(Integer userId){
-        List<Basket>  baskets=getBasketByUserId(userId);
-        return baskets.size();
+        return getBasketByUserId(userId).size();
     }
+
     @Override
     @Transactional
     public void addToBasket(Integer bookId, UserDTO userDTO, Integer bookQuantity){
@@ -91,24 +76,13 @@ public class BasketServiceImpl implements BasketService {
             basket.setBookQuantity(bookQuantityInBasket+bookQuantity);
             updateBasket(basket);
         } else {
-            BookDTO bookDTO = catalogueService.getBookById(bookId);
-            BasketDTO basketDTO = new BasketDTO();
-            basketDTO.setBookName(bookDTO.getBookName());
-            basketDTO.setBookQuantity(bookQuantity);
-            basketDTO.setBookPrice(bookDTO.getBookPrice());
-            basketDTO.setBookId(bookDTO.getBookId());
-            Basket basket1 = basketDTOToBasket(basketDTO);
-            User user=userService.userDTOToUser(userDTO);
-            basket1.setUser(user);
-            saveBasket(basket1);
+            BookDTO bookDTO = BookConverter.converter(catalogueDAO.findById(bookId));
+            Basket newBasket =BasketConverter.converter(BasketConverter.setBasketDTO(bookDTO,bookQuantity));
+            User user= UserConverter.converter(userDTO);
+            newBasket.setUser(user);
+            saveBasket(newBasket);
         }
 
-    }
-
-    private List<Basket> findAll() {
-        logger.debug("Finding all basket");
-        List<Basket> baskets = basketDAO.findAll();
-        return baskets;
     }
 
     private void delete(Basket basket) {
@@ -145,28 +119,6 @@ public class BasketServiceImpl implements BasketService {
         logger.debug("Getting basket by User id");
         List<Basket> baskets = basketDAO.getBasketByUserId(userId);
         return baskets;
-    }
-
-    private BasketDTO basketToBasketDTO(Basket basket) {
-        BasketDTO basketDTO = new BasketDTO();
-        basketDTO.setBookId(basket.getBookId());
-        basketDTO.setBasketId(basket.getBasketId());
-        basketDTO.setUser(basket.getUser());
-        basketDTO.setBookQuantity(basket.getBookQuantity());
-        basketDTO.setBookPrice(basket.getBookPrice());
-        basketDTO.setBookName(basket.getBookName());
-        return basketDTO;
-    }
-
-    private Basket basketDTOToBasket(BasketDTO basketDTO) {
-        Basket basket = new Basket();
-        basket.setBookId(basketDTO.getBookId());
-        basket.setBookQuantity(basketDTO.getBookQuantity());
-        basket.setBasketId(basketDTO.getBasketId());
-        basket.setBookPrice(basketDTO.getBookPrice());
-        basket.setUser(basketDTO.getUser());
-        basket.setBookName(basketDTO.getBookName());
-        return basket;
     }
 
 }

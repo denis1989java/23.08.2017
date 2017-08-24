@@ -128,6 +128,8 @@
                                         <td style="color: #FFFFFF"><c:out value="${basketDTO.bookQuantity}"/></td>
                                         <td style="color: #FFFFFF"><c:out value="${basketDTO.bookPrice}"/></td>
                                         <td>
+                                            <form>
+                                            </form>
                                             <form method="post" action="/user/basket/changeQuantity">
                                                 <input size="1" name="bookQuantity" style="text-align:center;"
                                                        maxlength="2"
@@ -151,7 +153,7 @@
                                 <tr>
                                     <th style="color: #FFFFFF"><p>Summ: <c:out value="${summ}"></c:out></p></th>
                                     <th>
-                                        <form action="orders" method="post">
+                                        <form action="/user/orders" method="post">
                                             <input value="${summ}" name="fullPrice" type="hidden">
                                             <input name="addOrder" value="order" type="submit" style="text-align:left">
                                         </form>

@@ -79,10 +79,10 @@
                     <a class="nav-link" href="${pageContext.request.contextPath}/user/cabinet">cabinet</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="${pageContext.request.contextPath}/user/news?page=0">news</a>
+                    <a class="nav-link" href="${pageContext.request.contextPath}/user/news/0">news</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="${pageContext.request.contextPath}/user/catalogue?page=0">catalogue</a>
+                    <a class="nav-link" href="${pageContext.request.contextPath}/user/catalogue/0">catalogue</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="${pageContext.request.contextPath}/user/profile">my profile</a>
@@ -103,7 +103,7 @@
         <div class="row">
             <div class="col-md-10" style="text-align: center">
                 <c:choose>
-                    <c:when test="${emptyOrders eq 0}">
+                    <c:when test="${empty orders}">
                         <c:out value="You don't have orders"></c:out>
                     </c:when>
                     <c:otherwise>
@@ -126,16 +126,17 @@
                                     <td style="color: #FFFFFF"><c:out value="${order.orderPrice}"/></td>
                                     <td style="color: #FFFFFF"><c:out value="${order.orderDate}"/></td>
                                     <td>
-                                        <form action="orders" method="post" name="changeReceiveStatus"
-                                              value="${order.orderId}">
+                                        <form>
+
+                                        </form>
+                                        <form action="/user/orders/changeReceiveStatus" method="post">
                                             <input type="hidden" name="orderId" value="${order.orderId}">
                                             <input name="changeReceiveStatus" value="change" type="submit"
                                                    style="text-align:left">
                                         </form>
                                     </td>
                                     <td>
-                                        <form action="orders" method="get" name="showDetails"
-                                              value="${order.orderId}">
+                                        <form action="/user/orders" method="get">
                                             <input type="hidden" name="orderId" value="${order.orderId}">
                                             <input name="showDetails" value="show details" type="submit"
                                                    style="text-align:left">
@@ -143,10 +144,10 @@
                                     </td>
                                     <td>
                                         <c:choose>
-                                            <c:when test="${order.orderDelivery eq NEW}">
-                                                <form action="changeOrder" method="get">
+                                            <c:when test="${order.orderDelivery == 'NEW'}">
+                                                <form action="/user/order/change" method="get">
                                                     <input type="hidden" name="orderId" value="${order.orderId}">
-                                                    <input name="changeOrder" value="change" type="submit"
+                                                    <input value="change" type="submit"
                                                            style="text-align:left">
                                                 </form>
                                             </c:when>
@@ -157,7 +158,7 @@
                                         </c:choose>
                                     </td>
                                     <c:choose>
-                                        <c:when test="${order.orderId eq ORDERID}">
+                                        <c:when test="${!empty ordersBooksDTO && order.orderId eq orderID}">
                                             <td style="color: #FFFFFF">
                                                 <table>
                                                     <tr>

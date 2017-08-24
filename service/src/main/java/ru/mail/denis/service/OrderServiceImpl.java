@@ -1,21 +1,16 @@
 package ru.mail.denis.service;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.hibernate.annotations.Target;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mail.denis.models.*;
 import ru.mail.denis.repositories.DAO.*;
 import ru.mail.denis.service.DTOmodels.*;
+import ru.mail.denis.service.util.*;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
-import static ru.mail.denis.repositories.HibernateUtil.sessionFactory;
 
 
 /**
@@ -24,76 +19,75 @@ import static ru.mail.denis.repositories.HibernateUtil.sessionFactory;
 
 @Service
 public class OrderServiceImpl implements Orderservice {
-
-    private final UserService userService;
+    private final UserDAO userDAO;
+    private final CatalogueDAO catalogueDAO;
+    private final BasketDAO basketDAO;
     private final OrderDAO orderDAO;
     private final OrdersBooksDAO ordersBooksDAO;
     private final OrderBooksTimesDAO orderBooksTimesDAO;
     private static final Logger logger = Logger.getLogger(OrderServiceImpl.class);
 
-    public OrderServiceImpl(UserService userService, OrderDAO orderDAO, OrdersBooksDAO ordersBooksDAO, OrderBooksTimesDAO orderBooksTimesDAO) {
-        this.userService = userService;
+    public OrderServiceImpl(UserDAO userDAO, CatalogueDAO catalogueDAO, BasketDAO basketDAO, OrderDAO orderDAO, OrdersBooksDAO ordersBooksDAO, OrderBooksTimesDAO orderBooksTimesDAO) {
+        this.userDAO = userDAO;
+        this.catalogueDAO = catalogueDAO;
+        this.basketDAO = basketDAO;
         this.orderDAO = orderDAO;
         this.ordersBooksDAO = ordersBooksDAO;
         this.orderBooksTimesDAO = orderBooksTimesDAO;
     }
 
     @Override
-    @Transactional()
-    public void insertToOrders(List<BasketDTO> baskets, UserDTO userDTO, Double orderPrice) {
+    @Transactional
+    public void addOrder(String userEmail, Double fullPrice) {
+        UserDTO userDTO = UserConverter.converter(userDAO.findByEmail(userEmail));
+        List<BasketDTO> basketDTOS = BasketConverter.converter(basketDAO.getBasketByUserId(userDTO.getUserId()));
         Order order = new Order();
         order.setOrderReceive(Receive.NOT_RECEIVED);
         order.setOrderDelivery(Delivery.NEW);
-        order.setOrderPrice(orderPrice);
-        //order.setUser(userService.userDTOToUser(userDTO));
+        order.setOrderPrice(fullPrice);
+        order.setUser(UserConverter.converter(userDTO));
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
         order.setOrderDate(dateFormat.format(date));
         saveOrder(order);
-        for (int i = 0; i < baskets.size(); i++) {
-            OrdersBooks ordersBooks = new OrdersBooks();
-            ordersBooks.setBookName(baskets.get(i).getBookName());
-            ordersBooks.setBookPrice(baskets.get(i).getBookPrice());
-            ordersBooks.setBookQuantity(baskets.get(i).getBookQuantity());
-            ordersBooks.setBookId(baskets.get(i).getBookId());
-            ordersBooks.setOrder(order);
-            OrderBooksTimes orderBooksTimes = new OrderBooksTimes();
-            orderBooksTimes.setBookPrice(baskets.get(i).getBookPrice());
-            orderBooksTimes.setBookName(baskets.get(i).getBookName());
-            orderBooksTimes.setBookid(baskets.get(i).getBookId());
-            orderBooksTimes.setBookQuantity(baskets.get(i).getBookQuantity());
-            orderBooksTimes.setOrder(order);
-            saveOrderBooks(ordersBooks);
-            saveOrderBooksTimes(orderBooksTimes);
+        for (int i = 0; i < basketDTOS.size(); i++) {
+            saveOrderBooks(OrderBooksConverter.setOrdersBooks(order, basketDTOS.get(i)));
+            saveOrderBooksTimes(OrdersBooksTimesConverter.setOrdersBooks(order, basketDTOS.get(i)));
+        }
+        List<Basket> baskets = basketDAO.getBasketByUserId(userDTO.getUserId());
+        for (Basket basket : baskets) {
+            basketDAO.delete(basket);
         }
     }
 
+
     @Override
-    @Transactional()
-    public List<OrderDTO> getOrdersByUser(Integer userId) {
-        List<Order> orders = getOrderByUserId(userId);
+    @Transactional
+    public List<OrderDTO> getOrdersByUser(String userEmail) {
+        UserDTO userDTO = UserConverter.converter(userDAO.findByEmail(userEmail));
+        List<Order> orders = getOrderByUserId(userDTO.getUserId());
         List<OrderDTO> orderDTOS = new ArrayList<>();
         for (Order order : orders) {
-            OrderDTO orderDTO = orderToOrderDTO(order);
+            OrderDTO orderDTO = OrderConverter.converter(order);
             orderDTOS.add(orderDTO);
         }
         return orderDTOS;
     }
 
     @Override
-    @Transactional()
+    @Transactional
     public List<OrderDTO> getOrders(int pageId, int total) {
         List<Order> orders = getOrdersByParts(pageId, total);
         List<OrderDTO> orderDTOS = new ArrayList<>();
         for (Order order : orders) {
-            OrderDTO orderDTO = orderToOrderDTO(order);
+            OrderDTO orderDTO = OrderConverter.converter(order);
             orderDTOS.add(orderDTO);
         }
         return orderDTOS;
     }
 
     @Override
-    @Transactional()
+    @Transactional
     public void changeReceiveStatus(Integer orderId) {
         Order order = findOrderById(orderId);
         Receive currentReceive = order.getOrderReceive();
@@ -106,33 +100,33 @@ public class OrderServiceImpl implements Orderservice {
     }
 
     @Override
-    @Transactional()
+    @Transactional
     public OrderDTO getOrderById(Integer orderId) {
-        OrderDTO orderDTO=orderToOrderDTO(findOrderById(orderId));
+        OrderDTO orderDTO = OrderConverter.converter(findOrderById(orderId));
         return orderDTO;
     }
 
     @Override
-    @Transactional()
+    @Transactional
     public List<OrderBookTimesDTO> getOrderBooksTimesDTOByOrderId(Integer orderId) {
         List<OrderBooksTimes> orderBooksTimes = getOrderBooksTimesByOrderId(orderId);
         List<OrderBookTimesDTO> orderBookTimesDTOS = new ArrayList<>();
         for (OrderBooksTimes orderBooksTime : orderBooksTimes) {
-            OrderBookTimesDTO orderBookTimesDTO = orderBookTimesToOrderBookTimesDTO(orderBooksTime);
+            OrderBookTimesDTO orderBookTimesDTO = OrdersBooksTimesConverter.converter(orderBooksTime);
             orderBookTimesDTOS.add(orderBookTimesDTO);
         }
         return orderBookTimesDTOS;
     }
 
     @Override
-    @Transactional()
+    @Transactional
     public void deleteFromOrdersBooksTimesById(Integer ordersBooksTimesId) {
         OrderBooksTimes orderBooksTimes = findOrderBooksTimesById(ordersBooksTimesId);
         deleteOrderBooksTimes(orderBooksTimes);
     }
 
     @Override
-    @Transactional()
+    @Transactional
     public void changeOrdersBooksTimesQuantity(Integer newQuantity, Integer ordersBooksTimesId) {
         OrderBooksTimes orderBooksTimes = findOrderBooksTimesById(ordersBooksTimesId);
         orderBooksTimes.setBookQuantity(newQuantity);
@@ -140,14 +134,14 @@ public class OrderServiceImpl implements Orderservice {
     }
 
     @Override
-    @Transactional()
+    @Transactional
     public void deleteOrder(Integer orderId) {
         Order order = findOrderById(orderId);
         deleteOrder(order);
     }
 
     @Override
-    @Transactional()
+    @Transactional
     public Integer bookQuantityInOrdersBooksTimes(Integer bookId, Integer orderId) {
         OrderBooksTimes orderBooksTimes = getOrderBooksTimesByOrderIdAndBookId(bookId, orderId);
         Integer quantity;
@@ -160,7 +154,7 @@ public class OrderServiceImpl implements Orderservice {
     }
 
     @Override
-    @Transactional()
+    @Transactional
     public void updateQuantityInOrderBooksTimes(Integer bookId, Integer orderId, Integer quantity) {
         OrderBooksTimes orderBooksTimes = getOrderBooksTimesByOrderIdAndBookId(bookId, orderId);
         orderBooksTimes.setBookQuantity(quantity);
@@ -168,20 +162,22 @@ public class OrderServiceImpl implements Orderservice {
     }
 
     @Override
-    @Transactional()
-    public void insertToOrdersBooksTimes(BookDTO bookDTO, Integer orderId) {
-        Order order = findOrderById(orderId);
-        OrderBooksTimes orderBooksTimes = new OrderBooksTimes();
-        orderBooksTimes.setBookQuantity(bookDTO.getBookQuantity());
-        orderBooksTimes.setBookid(bookDTO.getBookId());
-        orderBooksTimes.setBookName(bookDTO.getBookName());
-        orderBooksTimes.setBookPrice(bookDTO.getBookPrice());
-        orderBooksTimes.setOrder(order);
-        saveOrderBooksTimes(orderBooksTimes);
+    @Transactional
+    public void addOrderBookTimes(Integer bookid, Integer orderId, Integer bookQuantity) {
+        OrderBooksTimes orderBooksTimes=getOrderBooksTimesByOrderIdAndBookId(orderId,bookid);
+        if (orderBooksTimes != null) {
+            orderBooksTimes.setBookQuantity(orderBooksTimes.getBookQuantity()+bookQuantity);
+            updateOrderBooksTimes(orderBooksTimes);
+        } else {
+            BookDTO bookDTO=BookConverter.converter(catalogueDAO.findById(bookid)) ;
+            bookDTO.setBookQuantity(bookQuantity);
+            Order order = findOrderById(orderId);
+            saveOrderBooksTimes(OrdersBooksTimesConverter.setOrdersBooks(order,bookDTO));
+        }
     }
 
     @Override
-    @Transactional()
+    @Transactional
     public void updateOrderAndOrdersBooks(Integer orderId, Double fullPrice) {
         List<OrderBooksTimes> orderBooksTimes = getOrderBooksTimesByOrderId(orderId);
         Order order = findOrderById(orderId);
@@ -195,46 +191,51 @@ public class OrderServiceImpl implements Orderservice {
             deleteOrdersBooks(ordersBook);
         }
         for (OrderBooksTimes orderBooksTime : orderBooksTimes) {
-            OrdersBooks ordersBooks1 = new OrdersBooks();
-            ordersBooks1.setBookQuantity(orderBooksTime.getBookQuantity());
-            ordersBooks1.setBookId(orderBooksTime.getBookid());
-            ordersBooks1.setBookName(orderBooksTime.getBookName());
-            ordersBooks1.setBookPrice(orderBooksTime.getBookPrice());
+            OrdersBooks ordersBooks1 = OrderBooksConverter.converter(orderBooksTime);
             ordersBooks1.setOrder(order);
             saveOrderBooks(ordersBooks1);
         }
     }
 
     @Override
-    @Transactional()
+    @Transactional
     public List<OrdersBooksDTO> getOrderBooksDTOByOrderId(Integer orderId) {
         List<OrdersBooks> orderBooks = getOrdersBooksByOrderId(orderId);
         List<OrdersBooksDTO> orderBooksDTO = new ArrayList<>();
-        ListOrdersBooksToListOrdersBooksDTO(orderBooks, orderBooksDTO);
+        OrderBooksConverter.converter(orderBooks, orderBooksDTO);
         return orderBooksDTO;
     }
 
 
-
     @Override
-    @Transactional()
+    @Transactional
     public List<OrdersBooksDTO> getOrderBooksDTOByBookId(Integer bookId) {
         List<OrdersBooks> orderBooks = getOrdersBooksByBookId(bookId);
         List<OrdersBooksDTO> orderBooksDTO = new ArrayList<>();
-        ListOrdersBooksToListOrdersBooksDTO(orderBooks, orderBooksDTO);
+        OrderBooksConverter.converter(orderBooks, orderBooksDTO);
         return orderBooksDTO;
     }
 
     @Override
-    @Transactional()
-    public void updateOrderDeliveryStatus(Delivery delivery, Integer orderId) {
+    @Transactional
+    public void updateOrderDeliveryStatus(String deliveryStatus, Integer orderId) {
+        Delivery delivery = null;
+        if (deliveryStatus.equals("NEW")) {
+            delivery = Delivery.NEW;
+        } else if (deliveryStatus.equals("REWIWING")) {
+            delivery = Delivery.REVIWING;
+        } else if (deliveryStatus.equals("IN_PROGRESS")) {
+            delivery = Delivery.IN_PROGRESS;
+        } else if (deliveryStatus.equals("DELIVERED")) {
+            delivery = Delivery.DELIVERED;
+        }
         Order order = findOrderById(orderId);
         order.setOrderDelivery(delivery);
         updateOrder(order);
     }
 
     @Override
-    @Transactional()
+    @Transactional
     public Integer orderQuantity() {
         Integer quantity = findAllOrders().size();
         return quantity;
@@ -344,78 +345,5 @@ public class OrderServiceImpl implements Orderservice {
         logger.debug("Finding all orders");
         List<Order> orders = orderDAO.findAll();
         return orders;
-    }
-
-    private OrderBookTimesDTO orderBookTimesToOrderBookTimesDTO(OrderBooksTimes orderBooksTimes) {
-        OrderBookTimesDTO orderBookTimesDTO = new OrderBookTimesDTO();
-        orderBookTimesDTO.setBookid(orderBooksTimes.getBookid());
-        orderBookTimesDTO.setOrdersBooksTimesId(orderBooksTimes.getOrdersBooksTimesId());
-        orderBookTimesDTO.setBookQuantity(orderBooksTimes.getBookQuantity());
-        orderBookTimesDTO.setBookPrice(orderBooksTimes.getBookPrice());
-        orderBookTimesDTO.setBookName(orderBooksTimes.getBookName());
-        return orderBookTimesDTO;
-    }
-
-
-    private OrderBooksTimes orderBooksTimesDTOToOrderBooksTimes(OrderBookTimesDTO orderBookTimesDTO) {
-        OrderBooksTimes orderBooksTimes = new OrderBooksTimes();
-        orderBooksTimes.setBookQuantity(orderBookTimesDTO.getBookQuantity());
-        orderBooksTimes.setBookid(orderBookTimesDTO.getBookid());
-        orderBooksTimes.setBookName(orderBookTimesDTO.getBookName());
-        orderBooksTimes.setBookPrice(orderBookTimesDTO.getBookPrice());
-        orderBooksTimes.setOrdersBooksTimesId(orderBookTimesDTO.getOrdersBooksTimesId());
-        return orderBooksTimes;
-    }
-
-    private OrdersBooksDTO ordersBooksDTOToOrdersBooks(OrdersBooks ordersBooks) {
-        OrdersBooksDTO ordersBooksDTO = new OrdersBooksDTO();
-        ordersBooksDTO.setBookName(ordersBooks.getBookName());
-        ordersBooksDTO.setOrdersBooksId(ordersBooks.getOrdersBooksId());
-        ordersBooksDTO.setBookQuantity(ordersBooks.getBookQuantity());
-        ordersBooksDTO.setBookPrice(ordersBooks.getBookPrice());
-        ordersBooksDTO.setBookId(ordersBooks.getBookId());
-        return ordersBooksDTO;
-    }
-
-    private OrdersBooks ordersBooksToOrderBooksDTO(OrdersBooksDTO ordersBooksDTO) {
-        OrdersBooks ordersBooks = new OrdersBooks();
-        ordersBooks.setBookPrice(ordersBooksDTO.getBookPrice());
-        ordersBooks.setBookName(ordersBooksDTO.getBookName());
-        ordersBooks.setBookId(ordersBooksDTO.getBookId());
-        ordersBooks.setBookQuantity(ordersBooksDTO.getBookQuantity());
-        ordersBooks.setOrdersBooksId(ordersBooksDTO.getOrdersBooksId());
-        return ordersBooks;
-    }
-
-    private OrderDTO orderToOrderDTO(Order order) {
-        OrderDTO orderDTO = new OrderDTO();
-        orderDTO.setOrderPrice(order.getOrderPrice());
-        orderDTO.setOrderId(order.getOrderId());
-        orderDTO.setOrderDelivery(order.getOrderDelivery());
-        orderDTO.setOrderDate(order.getOrderDate());
-        orderDTO.setOrderReceive(order.getOrderReceive());
-        return orderDTO;
-    }
-
-    private Order orderDTOToOrder(OrderDTO orderDTO) {
-        Order order = new Order();
-        order.setOrderDelivery(orderDTO.getOrderDelivery());
-        order.setOrderPrice(orderDTO.getOrderPrice());
-        order.setOrderReceive(orderDTO.getOrderReceive());
-        order.setOrderDate(orderDTO.getOrderDate());
-        order.setOrderId(orderDTO.getOrderId());
-        return order;
-    }
-    public List<OrdersBooksDTO> ListOrdersBooksToListOrdersBooksDTO(List<OrdersBooks> orderBooks, List<OrdersBooksDTO> orderBooksDTO) {
-        for (OrdersBooks orderBook : orderBooks) {
-            OrdersBooksDTO ordersBookDTO = new OrdersBooksDTO();
-            ordersBookDTO.setBookId(orderBook.getBookId());
-            ordersBookDTO.setBookPrice(orderBook.getBookPrice());
-            ordersBookDTO.setBookQuantity((orderBook.getBookQuantity()));
-            ordersBookDTO.setOrdersBooksId(orderBook.getOrdersBooksId());
-            ordersBookDTO.setBookName(orderBook.getBookName());
-            orderBooksDTO.add(ordersBookDTO);
-        }
-        return orderBooksDTO;
     }
 }

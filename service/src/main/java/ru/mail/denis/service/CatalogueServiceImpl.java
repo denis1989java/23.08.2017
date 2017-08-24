@@ -10,12 +10,12 @@ import ru.mail.denis.models.Book;
 import ru.mail.denis.repositories.DAO.CatalogueDAO;
 import ru.mail.denis.repositories.DAO.CatalogueDAOImpl;
 import ru.mail.denis.service.DTOmodels.BookDTO;
+import ru.mail.denis.service.util.BookConverter;
 
 import javax.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ru.mail.denis.repositories.HibernateUtil.sessionFactory;
 
 /**
  * Created by user on 25.06.2017.
@@ -25,6 +25,7 @@ public class CatalogueServiceImpl implements CatalogueService {
 
     private final CatalogueDAO catalogueDAO;
     private static final Logger logger = Logger.getLogger(CatalogueServiceImpl.class);
+
     @Autowired
     public CatalogueServiceImpl(CatalogueDAO catalogueDAO) {
         this.catalogueDAO = catalogueDAO;
@@ -33,45 +34,37 @@ public class CatalogueServiceImpl implements CatalogueService {
     @Override
     @Transactional
     public List<BookDTO> getBooks(int pageId, int total) {
-        List<Book> books = getcatalogueByParts(pageId, total);
-        List<BookDTO> bookDTOS = new ArrayList<>();
-        for (Book book : books) {
-            BookDTO bookDTO = booktoBookDTO(book);
-            bookDTOS.add(bookDTO);
-        }
-        return bookDTOS;
+        return BookConverter.converter(getcatalogueByParts(pageId, total));
     }
 
     @Override
     @Transactional
     public Integer booksQuantity() {
-        Integer quantity=findAll().size();
-        return quantity;
+        return findAll().size();
     }
 
     @Override
     @Transactional
     public BookDTO getBookById(Integer bookId) {
-        BookDTO bookDTO=booktoBookDTO(findById(bookId));
-        return bookDTO;
+        return BookConverter.converter(findById(bookId));
     }
 
     @Override
     @Transactional
     public void updateBook(BookDTO bookDTO) {
-        updateBook(bookDTOToBook(bookDTO));
+        updateBook(BookConverter.converter(bookDTO));
     }
+
     @Override
     @Transactional
     public void deleteBook(Integer bookId){
-        Book book=findById(bookId);
-        deleteBook(book);
+        deleteBook(findById(bookId));
     }
 
     @Override
     @Transactional
     public void saveBook(BookDTO bookDTO) {
-        saveBook(bookDTOToBook(bookDTO));
+        saveBook(BookConverter.converter(bookDTO));
     }
 
     private List<Book> findAll() {
@@ -107,27 +100,4 @@ public class CatalogueServiceImpl implements CatalogueService {
         return catalogue;
     }
 
-    private Book bookDTOToBook(BookDTO bookDTO) {
-        Book book = new Book();
-        book.setChangable(bookDTO.getChangable());
-        book.setBookAuthor(bookDTO.getBookAuthor());
-        book.setBookDescription(bookDTO.getBookDescription());
-        book.setBookName(bookDTO.getBookName());
-        book.setBookPrice(bookDTO.getBookPrice());
-        book.setBookQuantity(bookDTO.getBookQuantity());
-        book.setBookId(bookDTO.getBookId());
-        return book;
-    }
-
-    private BookDTO booktoBookDTO(Book book) {
-        BookDTO bookDTO = new BookDTO();
-        bookDTO.setBookId(book.getBookId());
-        bookDTO.setChangable(book.getChangable());
-        bookDTO.setBookName(book.getBookName());
-        bookDTO.setBookPrice(book.getBookPrice());
-        bookDTO.setBookAuthor(book.getBookAuthor());
-        bookDTO.setBookDescription(book.getBookDescription());
-        bookDTO.setBookQuantity(book.getBookQuantity());
-        return bookDTO;
-    }
 }

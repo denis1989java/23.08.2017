@@ -143,6 +143,8 @@
                                 <td style="color: #FFFFFF"><c:out value="${userDTO.userRole}"/></td>
                                 <td style="color: #FFFFFF"><c:out value="${userDTO.userStatus}"/></td>
                                 <td>
+                                    <form>
+                                    </form>
                                     <form method="get" action="/superAdmin/changeRole">
                                         <select name="userRole">
                                             <option value="USER">USER</option>

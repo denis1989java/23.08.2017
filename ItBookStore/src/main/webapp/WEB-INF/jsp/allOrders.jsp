@@ -3,6 +3,7 @@
          pageEncoding="utf-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core"
            prefix="c" %>
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 
 <head>
 
@@ -88,7 +89,7 @@
         <a class="navbar-brand">Orders</a>
         <div class="collapse navbar-collapse" id="navbarExample">
             <ul class="navbar-nav ml-auto">
-                <c:if test="${user.userRole eq roleAdmin}">
+                <security:authorize access="hasAuthority('ADMIN')">
                     <li class="nav-item">
                         <a class="nav-link" href="${pageContext.request.contextPath}/admin/cabinet">Cabinet</a>
                     </li>
@@ -105,9 +106,8 @@
                     <li class="nav-item">
                         <a class="nav-link" href="${pageContext.request.contextPath}/logout">logout</a>
                     </li>
-
-                </c:if>
-                <c:if test="${user.userRole eq roleSuperAdmin}">
+                </security:authorize>
+                <security:authorize access="hasAuthority('SUPER_ADMIN')">
                     <li class="nav-item">
                         <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/cabinet">Cabinet</a>
                     </li>
@@ -126,7 +126,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="${pageContext.request.contextPath}/logout">logout</a>
                     </li>
-                </c:if>
+                </security:authorize>
             </ul>
         </div>
     </div>
@@ -137,7 +137,7 @@
         <div class="row">
             <div class="col-md-10" style="text-align: center">
                 <c:choose>
-                    <c:when test="${emptyOrders eq 0}">
+                    <c:when test="${empty orders}">
                         <c:out value="no orders"></c:out>
                     </c:when>
                     <c:otherwise>
@@ -159,30 +159,57 @@
                                     <td style="color: #FFFFFF"><c:out value="${order.orderPrice}"/></td>
                                     <td style="color: #FFFFFF"><c:out value="${order.orderDate}"/></td>
                                     <td>
-                                        <form method="post" action="allOrders" required>
-                                            <select name="deliveryStatus">
-                                                <option value="NEW">NEW</option>
-                                                <option value="REWIWING">REWIWING</option>
-                                                <option value="IN_PROGRESS">IN_PROGRESS</option>
-                                                <option value="DELIVERED">DELIVERED</option>
+                                        <form>
+                                        </form>
+                                        <security:authorize access="hasAuthority('ADMIN')">
+                                            <form method="post" action="/admin/changeDeliveryStatus" >
+                                                <select name="deliveryStatus">
+                                                    <option value="NEW">NEW</option>
+                                                    <option value="REWIWING">REWIWING</option>
+                                                    <option value="IN_PROGRESS">IN_PROGRESS</option>
+                                                    <option value="DELIVERED">DELIVERED</option>
+                                                </select>
                                                 <input type="hidden" name="page" value="${page}">
                                                 <input type="hidden" name="orderId" value="${order.orderId}">
                                                 <input name="changeStatus" value="change" type="submit"
                                                        style="text-align:left">
-                                            </select>
-                                        </form>
+                                            </form>
+                                        </security:authorize>
+                                        <security:authorize access="hasAuthority('SUPER_ADMIN')">
+                                            <form method="post" action="/superAdmin/changeDeliveryStatus" >
+                                                <select name="deliveryStatus">
+                                                    <option value="NEW">NEW</option>
+                                                    <option value="REWIWING">REWIWING</option>
+                                                    <option value="IN_PROGRESS">IN_PROGRESS</option>
+                                                    <option value="DELIVERED">DELIVERED</option>
+                                                </select>
+                                                <input type="hidden" name="orderId" value="${order.orderId}">
+                                                <input type="hidden" name="page" value="${page}">
+                                                <input name="changeStatus" value="change" type="submit"
+                                                       style="text-align:left">
+                                            </form>
+                                        </security:authorize>
+
                                     </td>
                                     <td>
-                                        <form action="allOrders" method="post" name="showDetails"
-                                              value="${order.orderId}">
-                                            <input type="hidden" name="page" value="${page}">
-                                            <input type="hidden" name="orderId" value="${order.orderId}">
-                                            <input name="showDetails" value="show details" type="submit"
-                                                   style="text-align:left">
-                                        </form>
+                                        <security:authorize access="hasAuthority('ADMIN')">
+                                            <form action="/admin/orders/${page}" method="get" >
+                                                <input type="hidden" name="orderId" value="${order.orderId}">
+                                                <input name="showDetails" value="show details" type="submit"
+                                                       style="text-align:left">
+                                            </form>
+                                        </security:authorize>
+                                        <security:authorize access="hasAuthority('SUPER_ADMIN')">
+                                            <form action="/superAdmin/orders/${page}" method="get" >
+                                                <input type="hidden" name="orderId" value="${order.orderId}">
+                                                <input name="showDetails" value="show details" type="submit"
+                                                       style="text-align:left">
+                                            </form>
+                                        </security:authorize>
+
                                     </td>
                                     <c:choose>
-                                        <c:when test="${order.orderId eq orderId}">
+                                        <c:when test="${!empty ordersBooksDTO && order.orderId eq orderID}">
                                             <td style="color: #FFFFFF">
                                                 <table>
                                                     <tr>
@@ -217,7 +244,7 @@
             <div class="col-md-5">
                 <div class="pagination">
                     <c:forEach var="page" items="${pagination}">
-                        <li><a href="allOrders?page=${page}">${page+1}</a></li>
+                        <li><a href="${page}">${page+1}</a></li>
                     </c:forEach>
                 </div>
             </div>
