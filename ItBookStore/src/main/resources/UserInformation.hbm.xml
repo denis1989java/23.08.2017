@@ -3,7 +3,7 @@
         "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
-    <class name="ru.mail.denis.models.UserInformation" table="T_USER_INFORMATION">
+    <class name="ru.mail.denis.repositories.model.UserInformation" table="T_USER_INFORMATION">
         <id name="userId" type="java.lang.Integer">
             <column name="f_user_id"/>
             <generator class="foreign">
@@ -28,6 +28,6 @@
         <property name="userAdditionalInfo" type="string">
             <column name="F_USER_ADDITIONAL_INFO" length="50"/>
         </property>
-        <one-to-one name="user" class="ru.mail.denis.models.User" constrained="true"/>
+        <one-to-one name="user" class="ru.mail.denis.repositories.model.User" constrained="true"/>
     </class>
 </hibernate-mapping>

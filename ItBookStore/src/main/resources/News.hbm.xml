@@ -3,7 +3,7 @@
         "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
-    <class name="ru.mail.denis.models.News" table="T_NEWS">
+    <class name="ru.mail.denis.repositories.model.News" table="T_NEWS">
         <id name="newsId" type="java.lang.Integer">
             <column name="F_NEWS_ID" length="10"/>
             <generator class="identity"/>

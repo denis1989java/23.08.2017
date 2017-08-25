@@ -1,6 +1,6 @@
 package ru.mail.denis.service.util;
 
-import ru.mail.denis.models.UserInformation;
+import ru.mail.denis.repositories.model.UserInformation;
 import ru.mail.denis.service.DTOmodels.UserDTO;
 import ru.mail.denis.service.DTOmodels.UserInformationDTO;
 

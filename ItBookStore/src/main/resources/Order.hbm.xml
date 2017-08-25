@@ -3,7 +3,7 @@
         "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
-    <class name="ru.mail.denis.models.Order" table="T_ORDER">
+    <class name="ru.mail.denis.repositories.model.Order" table="T_ORDER">
         <id name="orderId" type="java.lang.Integer">
             <column name="F_ORDER_ID" length="10"/>
             <generator class="identity"/>
@@ -11,37 +11,37 @@
         <property name="orderDelivery">
             <column name="F_ORDER_DELIVERY"></column>
             <type name="org.hibernate.type.EnumType">
-                <param name="enumClass">ru.mail.denis.models.Delivery</param>
+                <param name="enumClass">ru.mail.denis.repositories.model.Delivery</param>
                 <param name="useNamed">true</param>
             </type>
         </property>
         <property name="orderReceive">
             <column name="F_ORDER_RECEIVE"></column>
             <type name="org.hibernate.type.EnumType">
-                <param name="enumClass">ru.mail.denis.models.Receive</param>
+                <param name="enumClass">ru.mail.denis.repositories.model.Receive</param>
                 <param name="useNamed">true</param>
             </type>
         </property>
-        <property name="orderPrice" type="java.lang.Double">
+        <property name="orderPrice" type="java.math.BigDecimal">
             <column name="F_ORDER_PRICE"/>
         </property>
         <property name="orderDate" type="string">
             <column name="F_ORDER_DATE"/>
         </property>
-        <many-to-one name="user" class="ru.mail.denis.models.User">
+        <many-to-one name="user" class="ru.mail.denis.repositories.model.User">
             <column name="F_USER_ID"></column>
         </many-to-one>
         <set name="orderBooks" table="T_ORDERS_BOOKS" cascade="all" inverse="true">
             <key>
                 <column name="F_ORDER_ID"></column>
             </key>
-            <one-to-many class="ru.mail.denis.models.OrdersBooks"></one-to-many>
+            <one-to-many class="ru.mail.denis.repositories.model.OrdersBooks"></one-to-many>
         </set>
         <set name="orderBooksTimes" table="T_ORDERS_BOOKS_TIMES" cascade="all" inverse="true">
             <key>
                 <column name="F_ORDER_ID"></column>
             </key>
-            <one-to-many class="ru.mail.denis.models.OrderBooksTimes"></one-to-many>
+            <one-to-many class="ru.mail.denis.repositories.model.OrderBooksTimes"></one-to-many>
         </set>
     </class>
 </hibernate-mapping>

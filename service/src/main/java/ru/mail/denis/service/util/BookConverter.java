@@ -1,6 +1,6 @@
 package ru.mail.denis.service.util;
 
-import ru.mail.denis.models.Book;
+import ru.mail.denis.repositories.model.Book;
 import ru.mail.denis.service.DTOmodels.BookDTO;
 
 import java.util.ArrayList;

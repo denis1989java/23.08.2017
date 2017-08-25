@@ -94,7 +94,8 @@
         <a class="navbar-brand" href="#page-top">IT Book Store</a>
         <div class="collapse navbar-collapse" id="navbarExample">
             <ul class="navbar-nav ml-auto">
-              <a style="color: #e13612"> <c:out value="${successRegistration}"></c:out></a>
+                <a style="color: #e13612"> <c:out value="${successRegistration}"></c:out></a>
+                <a style="color: #e13612"><c:out value="${status}"></c:out></a>
                 <security:authorize
                         access="!hasAuthority('USER')&& !hasAuthority('ADMIN') && !hasAuthority('SUPER_ADMIN') ">
                     <li class="nav-item">
@@ -157,11 +158,11 @@
                         <a class="nav-link" href="${pageContext.request.contextPath}/user/cabinet">cabinet</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/user/news?page=0">news</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/user/news/0">news</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link"
-                           href="${pageContext.request.contextPath}/user/catalogue?page=0">catalogue</a>
+                           href="${pageContext.request.contextPath}/user/catalogue/0">catalogue</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="${pageContext.request.contextPath}/user/profile">my
@@ -182,18 +183,18 @@
                         <a class="nav-link" href="${pageContext.request.contextPath}/admin/cabinet">cabinet</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/admin/news?page=0">news</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/admin/news/0">news</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link"
-                           href="${pageContext.request.contextPath}/admin/catalogue?page=0">catalogue</a>
+                           href="${pageContext.request.contextPath}/admin/catalogue/0">catalogue</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="${pageContext.request.contextPath}/admin/profile">my
                             profile</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/admin/allOrders?page=0">Orders</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/admin/orders/0">Orders</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="${pageContext.request.contextPath}/logout">logout</a>
@@ -205,21 +206,21 @@
                            href="${pageContext.request.contextPath}/superAdmin/cabinet">cabinet</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/users?page=0">users</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/users/0">users</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/news?page=0">news</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/news/0">news</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link"
-                           href="${pageContext.request.contextPath}/superAdmin/catalogue?page=0">catalogue</a>
+                           href="${pageContext.request.contextPath}/superAdmin/catalogue/0">catalogue</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/profile">my profile</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link"
-                           href="${pageContext.request.contextPath}/superAdmin/allOrders?page=0">Orders</a>
+                           href="${pageContext.request.contextPath}/superAdmin/orders/0">Orders</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="${pageContext.request.contextPath}/logout">logout</a>

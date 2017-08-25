@@ -3,12 +3,12 @@
         "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
-    <class name="ru.mail.denis.models.OrderBooksTimes" table="T_ORDERS_BOOKS_TIMES">
+    <class name="ru.mail.denis.repositories.model.OrderBooksTimes" table="T_ORDERS_BOOKS_TIMES">
         <id name="ordersBooksTimesId" type="java.lang.Integer">
             <column name="F_ORDERS_BOOKS_TIMES_ID" length="10"/>
             <generator class="identity"/>
         </id>
-        <property name="bookPrice" type="java.lang.Double">
+        <property name="bookPrice" type="java.math.BigDecimal">
             <column name="F_BOOK_PRICE"/>
         </property>
         <property name="bookName" type="string">
@@ -20,7 +20,7 @@
         <property name="bookid" type="java.lang.Integer">
             <column name="F_BOOK_ID"/>
         </property>
-        <many-to-one name="order" class="ru.mail.denis.models.Order">
+        <many-to-one name="order" class="ru.mail.denis.repositories.model.Order">
             <column name="F_ORDER_ID"></column>
         </many-to-one>
     </class>

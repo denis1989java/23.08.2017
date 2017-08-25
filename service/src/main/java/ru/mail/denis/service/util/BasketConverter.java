@@ -1,6 +1,6 @@
 package ru.mail.denis.service.util;
 
-import ru.mail.denis.models.Basket;
+import ru.mail.denis.repositories.model.Basket;
 import ru.mail.denis.service.DTOmodels.BasketDTO;
 import ru.mail.denis.service.DTOmodels.BookDTO;
 

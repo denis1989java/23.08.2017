@@ -1,6 +1,7 @@
 package ru.mail.denis.service.DTOmodels;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * Created by user on 28.07.2017.
@@ -11,7 +12,7 @@ public class OrdersBooksDTO implements Serializable {
     private Integer ordersBooksId;
     private String bookName;
     private Integer bookId;
-    private Double bookPrice;
+    private BigDecimal bookPrice;
     private Integer bookQuantity;
 
     public Integer getOrdersBooksId() {
@@ -38,11 +39,11 @@ public class OrdersBooksDTO implements Serializable {
         this.bookId = bookId;
     }
 
-    public Double getBookPrice() {
+    public BigDecimal getBookPrice() {
         return bookPrice;
     }
 
-    public void setBookPrice(Double bookPrice) {
+    public void setBookPrice(BigDecimal bookPrice) {
         this.bookPrice = bookPrice;
     }
 

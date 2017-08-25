@@ -115,7 +115,7 @@
                            href="${pageContext.request.contextPath}/admin/catalogue/0">catalogue</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/admin/allOrders/0">Orders</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/admin/orders/0">Orders</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="${pageContext.request.contextPath}/logout">logout</a>
@@ -138,7 +138,7 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link"
-                           href="${pageContext.request.contextPath}/superAdmin/allOrders/0">Orders</a>
+                           href="${pageContext.request.contextPath}/superAdmin/orders/0">Orders</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="${pageContext.request.contextPath}/logout">logout</a>

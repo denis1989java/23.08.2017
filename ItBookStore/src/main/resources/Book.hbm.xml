@@ -3,7 +3,7 @@
         "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
-    <class name="ru.mail.denis.models.Book" table="T_BOOK">
+    <class name="ru.mail.denis.repositories.model.Book" table="T_BOOK">
         <id name="bookId" type="java.lang.Integer">
             <column name="F_BOOK_ID" length="5"/>
             <generator class="identity"/>
@@ -20,13 +20,13 @@
         <property name="bookDescription" type="string">
             <column name="F_BOOK_DESCRIPTION" length="45"/>
         </property>
-        <property name="bookPrice" type="java.lang.Double">
+        <property name="bookPrice" type="java.math.BigDecimal">
             <column name="F_BOOK_PRICE"/>
         </property>
         <property name="changable">
             <column name="F_CHANGABLE_STATUS"></column>
             <type name="org.hibernate.type.EnumType">
-                <param name="enumClass">ru.mail.denis.models.Changable</param>
+                <param name="enumClass">ru.mail.denis.repositories.model.Changable</param>
                 <param name="useNamed">true</param>
             </type>
         </property>

@@ -1,11 +1,9 @@
 package ru.mail.denis.service.util;
 
-import ru.mail.denis.models.Basket;
-import ru.mail.denis.models.Order;
-import ru.mail.denis.models.OrderBooksTimes;
-import ru.mail.denis.models.OrdersBooks;
+import ru.mail.denis.repositories.model.Order;
+import ru.mail.denis.repositories.model.OrderBooksTimes;
+import ru.mail.denis.repositories.model.OrdersBooks;
 import ru.mail.denis.service.DTOmodels.BasketDTO;
-import ru.mail.denis.service.DTOmodels.OrderBookTimesDTO;
 import ru.mail.denis.service.DTOmodels.OrdersBooksDTO;
 
 import java.util.List;

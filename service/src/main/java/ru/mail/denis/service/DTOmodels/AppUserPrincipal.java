@@ -3,9 +3,9 @@ package ru.mail.denis.service.DTOmodels;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import ru.mail.denis.models.Role;
-import ru.mail.denis.models.Status;
-import ru.mail.denis.models.User;
+import ru.mail.denis.repositories.model.Role;
+import ru.mail.denis.repositories.model.Status;
+import ru.mail.denis.repositories.model.User;
 
 import java.util.Collection;
 import java.util.Collections;

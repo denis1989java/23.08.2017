@@ -1,6 +1,6 @@
 package ru.mail.denis.service.util;
 
-import ru.mail.denis.models.Order;
+import ru.mail.denis.repositories.model.Order;
 import ru.mail.denis.service.DTOmodels.OrderDTO;
 
 /**

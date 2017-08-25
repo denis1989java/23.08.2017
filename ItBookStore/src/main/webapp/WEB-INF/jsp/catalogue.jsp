@@ -124,7 +124,7 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link"
-                           href="${pageContext.request.contextPath}/admin/allOrders/0">Orders</a>
+                           href="${pageContext.request.contextPath}/admin/orders/0">Orders</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="${pageContext.request.contextPath}/admin/profile">my profile</a>
@@ -145,7 +145,7 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link"
-                           href="${pageContext.request.contextPath}/superAdmin/allOrders/0">Orders</a>
+                           href="${pageContext.request.contextPath}/superAdmin/orders/0">Orders</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/profile">my profile</a>
@@ -201,7 +201,8 @@
                             <th style="color: #FFFFFF">Description</th>
                             <th style="color: #FFFFFF">Quantity</th>
                             <th style="color: #FFFFFF">Change</th>
-                            <th style="color: #FFFFFF">Action</th>
+                            <th style="color: #FFFFFF">Delete</th>
+                            <th style="color: #FFFFFF">Copy</th>
                         </tr>
                         <c:forEach var="book" items="${catalogue}">
                             <tr>
@@ -224,14 +225,23 @@
                                     </c:choose>
                                     </td>
                                     <td>
-                                        <spring:url value="/admin/copyBook/${book.bookId}" var="copyBook"/>
-                                        <spring:url value="/admin/deleteBook/${book.bookId}" var="deleteBook"/>
+                                        <c:choose>
+                                            <c:when test="${book.changable eq CHANGABLE}">
+                                                <spring:url value="/admin/deleteBook/${book.bookId}" var="deleteBook"/>
+                                                <button style="background-color: #e13612" class="btn btn-info"
+                                                        onclick="location.href='${deleteBook}'">Delete book
+                                                </button>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a style="color: #FFFFFF"><c:out value="Impossible to delete"></c:out></a>
+                                            </c:otherwise>
+                                        </c:choose>
 
+                                    </td>
+                                    <td>
+                                        <spring:url value="/admin/copyBook/${book.bookId}" var="copyBook"/>
                                         <button style="background-color: #e13612" class="btn btn-info"
                                                 onclick="location.href='${copyBook}'">Copy book
-                                        </button>
-                                        <button style="background-color: #e13612" class="btn btn-info"
-                                                onclick="location.href='${deleteBook}'">Delete book
                                         </button>
                                     </td>
                                 </security:authorize>
@@ -249,14 +259,25 @@
                                     </c:choose>
                                     </td>
                                     <td>
+                                        <c:choose>
+                                            <c:when test="${book.changable eq CHANGABLE}">
+                                                <spring:url value="/superAdmin/deleteBook/${book.bookId}"
+                                                            var="deleteBook"/>
+                                                <button style="background-color: #e13612" class="btn btn-info"
+                                                        onclick="location.href='${deleteBook}'">Delete book
+                                                </button>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a style="color: #FFFFFF"><c:out value="Impossible to delete"></c:out></a>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                    <td>
                                         <spring:url value="/superAdmin/copyBook/${book.bookId}" var="copyBook"/>
-                                        <spring:url value="/superAdmin/deleteBook/${book.bookId}" var="deleteBook"/>
                                         <button style="background-color: #e13612" class="btn btn-info"
                                                 onclick="location.href='${copyBook}'">Copy book
                                         </button>
-                                        <button style="background-color: #e13612" class="btn btn-info"
-                                                onclick="location.href='${deleteBook}'">Delete book
-                                        </button>
+
                                     </td>
                                 </security:authorize>
                             </tr>

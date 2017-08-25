@@ -1,10 +1,9 @@
 package ru.mail.denis.service;
 
 import org.springframework.transaction.annotation.Transactional;
-import ru.mail.denis.models.Delivery;
-import ru.mail.denis.models.OrdersBooks;
 import ru.mail.denis.service.DTOmodels.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -12,9 +11,7 @@ import java.util.List;
  */
 public interface Orderservice {
 
-
-    void addOrder(String userEmail, Double fullPrice);
-
+    void addOrder(String userEmail, BigDecimal fullPrice);
 
     List<OrderDTO> getOrdersByUser(String userEmail);
 
@@ -38,7 +35,7 @@ public interface Orderservice {
 
     void addOrderBookTimes(Integer bookid, Integer orderId, Integer bookQuantity);
 
-    void updateOrderAndOrdersBooks(Integer orderId, Double fullPrice);
+    void updateOrderAndOrdersBooks(Integer orderId, BigDecimal fullPrice);
 
     List<OrdersBooksDTO> getOrderBooksDTOByOrderId(Integer orderId);
 

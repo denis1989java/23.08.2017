@@ -1,10 +1,9 @@
 package ru.mail.denis.service.DTOmodels;
 
-import ru.mail.denis.models.Changable;
+import ru.mail.denis.repositories.model.Changable;
 
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * Created by user on 27.07.2017.
@@ -16,7 +15,7 @@ public class BookDTO implements Serializable {
     private String bookName;
     private String bookAuthor;
     private Integer bookQuantity;
-    private Double bookPrice;
+    private BigDecimal bookPrice;
     private String bookDescription;
     private Changable changable;
 
@@ -60,11 +59,11 @@ public class BookDTO implements Serializable {
         this.bookQuantity = bookQuantity;
     }
 
-    public Double getBookPrice() {
+    public BigDecimal getBookPrice() {
         return bookPrice;
     }
 
-    public void setBookPrice(Double bookPrice) {
+    public void setBookPrice(BigDecimal bookPrice) {
         this.bookPrice = bookPrice;
     }
 

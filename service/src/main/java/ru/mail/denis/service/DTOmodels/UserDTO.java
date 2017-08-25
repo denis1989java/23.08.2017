@@ -1,13 +1,10 @@
 package ru.mail.denis.service.DTOmodels;
 
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotEmpty;
-import ru.mail.denis.models.*;
-import ru.mail.denis.service.ValidEmail;
-import ru.mail.denis.service.ValidPassword;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+
+import ru.mail.denis.repositories.model.Role;
+import ru.mail.denis.repositories.model.Status;
+
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
