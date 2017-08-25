@@ -8,10 +8,10 @@
 
 <http auto-config="true">
     <intercept-url pattern="/filter" access="permitAll"/>
-    <intercept-url pattern="/admin**" access="hasRole('ADMIN')"/>
-    <intercept-url pattern="/superAdmin**" access="hasRole('SUPER_ADMIN')"/>
+    <intercept-url pattern="/admin/**" access="hasAuthority('ADMIN')"/>
+    <intercept-url pattern="/superAdmin/**" access="hasAuthority('SUPER_ADMIN')"/>
     <intercept-url pattern="/" access="permitAll()"/>
-    <intercept-url pattern="/user**" access="hasRole('USER')"/>
+    <intercept-url pattern="/user/**" access="hasAuthority('USER')"/>
     <intercept-url pattern="/login" access="permitAll()"/>
     <intercept-url pattern="/registration" access="permitAll()"/>
     <form-login
