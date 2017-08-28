@@ -1,7 +1,7 @@
 package ru.mail.denis.service.util;
 
 import ru.mail.denis.repositories.model.News;
-import ru.mail.denis.service.DTOmodels.NewsDTO;
+import ru.mail.denis.service.modelDTO.NewsDTO;
 
 import java.util.ArrayList;
 import java.util.List;

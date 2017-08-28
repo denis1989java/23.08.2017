@@ -11,4 +11,6 @@ public interface OrdersBooksDAO extends GenericDao<OrdersBooks, Integer> {
     List<OrdersBooks> getOrdersBooksByOrderId(Integer orderId);
 
     List<OrdersBooks> getOrdersBooksByBookId(Integer bookId);
+
+    List<OrdersBooks> getOrdersBooksByUserId(Integer userId);
 }

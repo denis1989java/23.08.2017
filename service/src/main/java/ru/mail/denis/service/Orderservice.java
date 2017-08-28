@@ -1,7 +1,6 @@
 package ru.mail.denis.service;
 
-import org.springframework.transaction.annotation.Transactional;
-import ru.mail.denis.service.DTOmodels.*;
+import ru.mail.denis.service.modelDTO.*;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -11,37 +10,31 @@ import java.util.List;
  */
 public interface Orderservice {
 
+
+    ViewDTO viewPageOrders(String orderId, String userEmail);
+
+    ViewDTO viewPageAllOrders(String orderId, Integer page);
+
+    ViewDTO viewPageChangeOrder(OrderDTO orderDTO, String orderId);
+
     void addOrder(String userEmail, BigDecimal fullPrice);
-
-    List<OrderDTO> getOrdersByUser(String userEmail);
-
-    List<OrderDTO> getOrders(int pageId, int total);
 
     void changeReceiveStatus(Integer orderId);
 
     OrderDTO getOrderById(Integer orderId);
 
-    List<OrderBookTimesDTO> getOrderBooksTimesDTOByOrderId(Integer orderId);
-
-    void deleteFromOrdersBooksTimesById(Integer ordersBooksTimesId);
+    void deleteFromOrdersBooksTimesById(String[] deletings);
 
     void changeOrdersBooksTimesQuantity(Integer newQuantity, Integer ordersBooksTimesId);
 
     void deleteOrder(Integer orderId);
 
-    Integer bookQuantityInOrdersBooksTimes(Integer bookId, Integer orderId);
-
-    void updateQuantityInOrderBooksTimes(Integer bookId, Integer orderId, Integer quantity);
-
     void addOrderBookTimes(Integer bookid, Integer orderId, Integer bookQuantity);
 
     void updateOrderAndOrdersBooks(Integer orderId, BigDecimal fullPrice);
-
-    List<OrdersBooksDTO> getOrderBooksDTOByOrderId(Integer orderId);
 
     List<OrdersBooksDTO> getOrderBooksDTOByBookId(Integer bookId);
 
     void updateOrderDeliveryStatus(String deliveryStatus, Integer orderId);
 
-    Integer orderQuantity();
 }

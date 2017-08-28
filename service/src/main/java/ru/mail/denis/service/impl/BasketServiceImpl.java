@@ -9,14 +9,18 @@ import ru.mail.denis.repositories.model.User;
 import ru.mail.denis.repositories.BasketDAO;
 import ru.mail.denis.repositories.CatalogueDAO;
 import ru.mail.denis.service.BasketService;
-import ru.mail.denis.service.DTOmodels.BasketDTO;
-import ru.mail.denis.service.DTOmodels.BookDTO;
-import ru.mail.denis.service.DTOmodels.UserDTO;
+import ru.mail.denis.service.modelDTO.BasketDTO;
+import ru.mail.denis.service.modelDTO.BookDTO;
+import ru.mail.denis.service.modelDTO.UserDTO;
+import ru.mail.denis.service.modelDTO.ViewDTO;
 import ru.mail.denis.service.util.BasketConverter;
 import ru.mail.denis.service.util.BookConverter;
 import ru.mail.denis.service.util.UserConverter;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -36,17 +40,33 @@ public class BasketServiceImpl implements BasketService {
     }
 
 
-
     @Override
     @Transactional
-    public List<BasketDTO> getBooksFromBasketByUser(Integer userId) {
-        return BasketConverter.converter(getBasketByUserId(userId));
+    public ViewDTO viewPage(Integer userId){
+        List<BasketDTO> basket= BasketConverter.converter(getBasketByUserId(userId));
+        BigDecimal summ = BigDecimal.ZERO;
+        for (int i = 0; i < basket.size(); i++) {
+            BigDecimal price = basket.get(i).getBookPrice();
+            Integer quantity = basket.get(i).getBookQuantity();
+            summ = summ.add(price.multiply(new BigDecimal(quantity))) ;
+        }
+        Map<String,Object> map=new HashMap<>();
+        map.put("basket",basket);
+        map.put("summ",summ);
+        ViewDTO viewDTO=new ViewDTO();
+        viewDTO.setViewMap(map);
+        return viewDTO;
     }
 
+
     @Override
     @Transactional
-    public void deleteBookFromBasker(Integer basketId) {
-        delete(findById(basketId));
+    public void deleteBookFromBasket(String[] deletings) {
+        for (String deleting : deletings) {
+            Integer basketId= Integer.valueOf(deleting);
+            Basket basket=findById(basketId);
+            delete(basket);
+        }
     }
 
     @Override
@@ -55,12 +75,6 @@ public class BasketServiceImpl implements BasketService {
         Basket basket = findById(basketId);
         basket.setBookQuantity(newQuantity);
         updateBasket(basket);
-    }
-
-    @Override
-    @Transactional
-    public Integer basketQuantity(Integer userId){
-        return getBasketByUserId(userId).size();
     }
 
     @Override

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mail.denis.repositories.model.User;
 import ru.mail.denis.repositories.UserDAO;
-import ru.mail.denis.service.DTOmodels.AppUserPrincipal;
+import ru.mail.denis.service.modelDTO.AppUserPrincipal;
 
 /**
  * Created by user on 15.08.2017.

@@ -2,9 +2,12 @@ package ru.mail.denis.service.util;
 
 import ru.mail.denis.repositories.model.Order;
 import ru.mail.denis.repositories.model.OrderBooksTimes;
-import ru.mail.denis.service.DTOmodels.BasketDTO;
-import ru.mail.denis.service.DTOmodels.BookDTO;
-import ru.mail.denis.service.DTOmodels.OrderBookTimesDTO;
+import ru.mail.denis.service.modelDTO.BasketDTO;
+import ru.mail.denis.service.modelDTO.BookDTO;
+import ru.mail.denis.service.modelDTO.OrderBookTimesDTO;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by user on 24.08.2017.
@@ -50,5 +53,14 @@ public class OrdersBooksTimesConverter {
         orderBooksTimes.setBookPrice(bookDTO.getBookPrice());
         orderBooksTimes.setOrder(order);
         return orderBooksTimes;
+    }
+
+    public static List<OrderBookTimesDTO> converter(List <OrderBooksTimes> orderBooksTimes){
+        List<OrderBookTimesDTO> orderBookTimesDTOS = new ArrayList<>();
+        for (OrderBooksTimes orderBooksTime : orderBooksTimes) {
+            OrderBookTimesDTO orderBookTimesDTO = OrdersBooksTimesConverter.converter(orderBooksTime);
+            orderBookTimesDTOS.add(orderBookTimesDTO);
+        }
+        return orderBookTimesDTOS;
     }
 }

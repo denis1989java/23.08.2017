@@ -1,16 +1,18 @@
 package ru.mail.denis.service;
 
-import ru.mail.denis.repositories.model.Role;
-import ru.mail.denis.repositories.model.Status;
-import ru.mail.denis.service.DTOmodels.UserDTO;
-import ru.mail.denis.service.DTOmodels.UserInformationDTO;
-
-import java.util.List;
+import ru.mail.denis.service.modelDTO.UserDTO;
+import ru.mail.denis.service.modelDTO.UserInformationDTO;
+import ru.mail.denis.service.modelDTO.ViewDTO;
 
 /**
  * Created by user on 05.07.2017.
  */
 public interface UserService {
+
+
+    ViewDTO viewPageProfile(String userEmail);
+
+    ViewDTO viewPageAllUsers(Integer page);
 
     UserDTO getUserDTOByEmail(String email);
 
@@ -22,14 +24,11 @@ public interface UserService {
 
     void updateUserInformationDTO(UserInformationDTO userInformationDTO, Integer userId);
 
-    List<UserDTO> getUsersDTO(int pageId, int total);
 
-    Integer usersDTOQuantity();
+    void changeUserDTOStatus(String userStatus, Integer userId);
 
-    void changeUserDTOStatus(Status status, Integer userId);
 
-    void changeUserDTORole(Role role, Integer userId);
+    void changeUserDTORole(String userRole, Integer userId);
 
-    void deleteUserDTO(Integer userId);
-
+    void deleteUserDTO(String[] deletings);
 }

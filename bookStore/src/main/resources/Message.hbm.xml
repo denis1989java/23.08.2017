@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="ru.mail.denis.repositories.model.Message" table="t_message" >
+        <id name="messageId" type="java.lang.Integer">
+            <column name="F_MESSAGE_ID"/>
+            <generator class="identity"/>
+        </id>
+        <property name="authorEmail" type="java.lang.String">
+            <column name="F_AUTHOR_EMAIL" length="50"/>
+        </property>
+        <property name="messageText" type="java.lang.String">
+            <column name="F_MESSAGE_TEXT" length="500"/>
+        </property>
+    </class>
+</hibernate-mapping>

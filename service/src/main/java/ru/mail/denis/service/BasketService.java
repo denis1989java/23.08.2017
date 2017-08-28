@@ -1,9 +1,7 @@
 package ru.mail.denis.service;
 
-import ru.mail.denis.service.DTOmodels.BasketDTO;
-import ru.mail.denis.service.DTOmodels.UserDTO;
-
-import java.util.List;
+import ru.mail.denis.service.modelDTO.UserDTO;
+import ru.mail.denis.service.modelDTO.ViewDTO;
 
 /**
  * Created by user on 05.07.2017.
@@ -11,15 +9,11 @@ import java.util.List;
 public interface BasketService {
 
 
+    ViewDTO viewPage(Integer userId);
 
-    List<BasketDTO> getBooksFromBasketByUser(Integer userId);
-
-
-    void deleteBookFromBasker(Integer basketId);
+    void deleteBookFromBasket(String[] deletings);
 
     void changeBookQuantityInBasket(Integer newQuantity, Integer basketId);
-
-    Integer basketQuantity(Integer userId);
 
     void addToBasket(Integer bookId, UserDTO userDTO, Integer bookQuantity);
 }

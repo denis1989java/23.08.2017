@@ -1,7 +1,10 @@
 package ru.mail.denis.service.util;
 
 import ru.mail.denis.repositories.model.Order;
-import ru.mail.denis.service.DTOmodels.OrderDTO;
+import ru.mail.denis.service.modelDTO.OrderDTO;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by user on 24.08.2017.
@@ -28,6 +31,15 @@ public class OrderConverter {
         orderDTO.setOrderDate(order.getOrderDate());
         orderDTO.setOrderReceive(order.getOrderReceive());
         return orderDTO;
+    }
+
+    public static List<OrderDTO> converter(List <Order> orders){
+        List<OrderDTO> orderDTOS = new ArrayList<>();
+        for (Order order : orders) {
+            OrderDTO orderDTO = OrderConverter.converter(order);
+            orderDTOS.add(orderDTO);
+        }
+        return orderDTOS;
     }
 
 }

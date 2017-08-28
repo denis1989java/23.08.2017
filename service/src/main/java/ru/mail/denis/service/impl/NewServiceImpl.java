@@ -6,11 +6,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mail.denis.repositories.model.News;
 import ru.mail.denis.repositories.NewsDAO;
-import ru.mail.denis.service.DTOmodels.NewsDTO;
+import ru.mail.denis.service.modelDTO.NewsDTO;
+import ru.mail.denis.service.modelDTO.ViewDTO;
 import ru.mail.denis.service.NewService;
 import ru.mail.denis.service.util.NewsConverter;
 
-import java.util.List;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 
 /**
@@ -27,11 +30,34 @@ public class NewServiceImpl implements NewService {
         this.newsDAO = newsDAO;
     }
 
+
     @Override
     @Transactional
-    public List<NewsDTO> getNews(int pageId, int total) {
-        return NewsConverter.converter(getNewsByParts(pageId, total));
+    public ViewDTO viewPage(Integer page){
+        int total=7;
+        if (page != 0) {
+            page = page * total;
+        }
+        List<NewsDTO> newsDTOS=NewsConverter.converter(getNewsByParts(page, total));
+        Integer newsQuantity =findAll().size();
+        List<Integer> pagination = new ArrayList();
+        Integer pageQuantity = 0;
+        if (newsQuantity % total == 0) {
+            pageQuantity = newsQuantity / total;
+        } else {
+            pageQuantity = newsQuantity / total + 1;
+        }
+        for (Integer i = 0; i < pageQuantity; i++) {
+            pagination.add(i);
+        }
+        Map <String,Object> map=new HashMap<>();
+        map.put("newsDTOS",newsDTOS);
+        map.put("pagination",pagination);
+        ViewDTO viewDTO=new ViewDTO();
+        viewDTO.setViewMap(map);
+        return viewDTO;
     }
+
 
     @Override
     @Transactional
@@ -48,6 +74,10 @@ public class NewServiceImpl implements NewService {
     @Override
     @Transactional
     public void updateNew(NewsDTO newsDTO) {
+        newsDTO.setNewsId(newsDTO.getNewsId());
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date();
+        newsDTO.setNewsDate(dateFormat.format(date));
         updateNews(NewsConverter.converter(newsDTO));
     }
 
@@ -56,13 +86,6 @@ public class NewServiceImpl implements NewService {
     public void addNew(NewsDTO newsDTO) {
         saveNews(NewsConverter.converter(newsDTO));
     }
-
-    @Override
-    @Transactional
-    public Integer newsQuantity() {
-        return findAll().size();
-    }
-
 
     private List<News> findAll() {
         logger.debug("Finding all news");

@@ -1,8 +1,7 @@
 package ru.mail.denis.service;
 
-import ru.mail.denis.service.DTOmodels.NewsDTO;
-
-import java.util.List;
+import ru.mail.denis.service.modelDTO.NewsDTO;
+import ru.mail.denis.service.modelDTO.ViewDTO;
 
 /**
  * Created by user on 05.07.2017.
@@ -10,8 +9,7 @@ import java.util.List;
 public interface NewService {
 
 
-    List<NewsDTO> getNews(int pageId, int total);
-
+    ViewDTO viewPage(Integer page);
 
     NewsDTO getNewById(Integer newsId);
 
@@ -21,5 +19,4 @@ public interface NewService {
 
     void addNew(NewsDTO newsDTO);
 
-    Integer newsQuantity();
 }

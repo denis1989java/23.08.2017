@@ -1,8 +1,7 @@
 package ru.mail.denis.service;
 
-import ru.mail.denis.service.DTOmodels.BookDTO;
-
-import java.util.List;
+import ru.mail.denis.service.modelDTO.BookDTO;
+import ru.mail.denis.service.modelDTO.ViewDTO;
 
 /**
  * Created by user on 05.07.2017.
@@ -10,9 +9,7 @@ import java.util.List;
 public interface CatalogueService {
 
 
-    List<BookDTO> getBooks(int pageId, int total);
-
-    Integer booksQuantity();
+    ViewDTO viewPage(Integer page, String orderId);
 
     BookDTO getBookById(Integer bookId);
 

@@ -5,14 +5,14 @@
   <artifactId>BookStore</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>ItBookStorE</name>
+  <name>BookStore</name>
   <modules>
-    <module>ItBookStore</module>
+    <module>bookStore</module>
     <module>service</module>
     <module>repository</module>
   </modules>
   <build>
-    <finalName>ItBookStorE</finalName>
+    <finalName>BookStore</finalName>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

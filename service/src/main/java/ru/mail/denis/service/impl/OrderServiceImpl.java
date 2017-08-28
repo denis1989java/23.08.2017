@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mail.denis.repositories.*;
 import ru.mail.denis.repositories.model.*;
-import ru.mail.denis.service.DTOmodels.*;
+import ru.mail.denis.service.modelDTO.*;
 import ru.mail.denis.service.Orderservice;
 import ru.mail.denis.service.util.*;
 
@@ -40,14 +40,88 @@ public class OrderServiceImpl implements Orderservice {
 
     @Override
     @Transactional
-    public void addOrder(String userEmail, BigDecimal fullPrice) {
+    public ViewDTO viewPageOrders(String orderId, String userEmail) {
         UserDTO userDTO = UserConverter.converter(userDAO.findByEmail(userEmail));
-        List<BasketDTO> basketDTOS = BasketConverter.converter(basketDAO.getBasketByUserId(userDTO.getUserId()));
+        List<OrderDTO> orderDTOS = OrderConverter.converter(getOrderByUserId(userDTO.getUserId()));
+        Map<String, Object> map = new HashMap<>();
+        if (orderId != null) {
+            List<OrdersBooks> orderBooks = getOrdersBooksByOrderId(Integer.valueOf(orderId));
+            List<OrdersBooksDTO> orderBooksDTO = new ArrayList<>();
+            OrderBooksConverter.converter(orderBooks, orderBooksDTO);
+            map.put("ordersBooksDTO", orderBooksDTO);
+            map.put("orderID", orderId);
+        }
+        map.put("orders", orderDTOS);
+        ViewDTO viewDTO = new ViewDTO();
+        viewDTO.setViewMap(map);
+        return viewDTO;
+    }
+
+    @Override
+    @Transactional
+    public ViewDTO viewPageAllOrders(String orderId, Integer page) {
+        int total = 7;
+        if (page != 0) {
+            page = page * total;
+        }
+        Integer orderDTOQuantity = findAllOrders().size();
+        List<Integer> pagination = new ArrayList();
+        Integer pageQuantity = 0;
+        if (orderDTOQuantity % total == 0) {
+            pageQuantity = orderDTOQuantity / total;
+        } else {
+            pageQuantity = orderDTOQuantity / total + 1;
+        }
+        for (Integer i = 0; i < pageQuantity; i++) {
+            pagination.add(i);
+        }
+        List<OrderDTO> orders = OrderConverter.converter(getOrdersByParts(page, total));
+        Map<String, Object> map = new HashMap<>();
+        if (orderId != null) {
+            List<OrdersBooks> orderBooks = getOrdersBooksByOrderId(Integer.valueOf(orderId));
+            List<OrdersBooksDTO> orderBooksDTO = new ArrayList<>();
+            OrderBooksConverter.converter(orderBooks, orderBooksDTO);
+            map.put("ordersBooksDTO", orderBooksDTO);
+            map.put("orderID", orderId);
+        }
+        map.put("orders", orders);
+        map.put("pagination", pagination);
+        ViewDTO viewDTO = new ViewDTO();
+        viewDTO.setViewMap(map);
+        return viewDTO;
+    }
+
+    @Override
+    @Transactional
+    public ViewDTO viewPageChangeOrder(OrderDTO orderDTO, String orderId) {
+        List<OrderBookTimesDTO> bookTimesDTOS = OrdersBooksTimesConverter.converter(getOrderBooksTimesByOrderId(Integer.valueOf(orderId)));
+        BigDecimal summ = BigDecimal.ZERO;
+        for (OrderBookTimesDTO bookTimesDTO : bookTimesDTOS) {
+            BigDecimal price = bookTimesDTO.getBookPrice();
+            Integer quantity = bookTimesDTO.getBookQuantity();
+            summ = summ.add(price.multiply(new BigDecimal(quantity)));
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("orderDTO", orderDTO);
+        map.put("summ", summ);
+        map.put("OrderBookTimesDTO", bookTimesDTOS);
+        ViewDTO viewDTO = new ViewDTO();
+        viewDTO.setViewMap(map);
+        return viewDTO;
+
+    }
+
+
+    @Override
+    @Transactional
+    public void addOrder(String userEmail, BigDecimal fullPrice) {
+        User user = userDAO.findByEmail(userEmail);
+        List<BasketDTO> basketDTOS = BasketConverter.converter(basketDAO.getBasketByUserId(user.getUserId()));
         Order order = new Order();
         order.setOrderReceive(Receive.NOT_RECEIVED);
         order.setOrderDelivery(Delivery.NEW);
         order.setOrderPrice(fullPrice);
-        order.setUser(UserConverter.converter(userDTO));
+        order.setUser(user);
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
         order.setOrderDate(dateFormat.format(date));
@@ -55,38 +129,15 @@ public class OrderServiceImpl implements Orderservice {
         for (int i = 0; i < basketDTOS.size(); i++) {
             saveOrderBooks(OrderBooksConverter.setOrdersBooks(order, basketDTOS.get(i)));
             saveOrderBooksTimes(OrdersBooksTimesConverter.setOrdersBooks(order, basketDTOS.get(i)));
+            Book book = catalogueDAO.findById(basketDTOS.get(i).getBookId());
+            book.setChangable(Changable.NOT_CHANGABLE);
         }
-        List<Basket> baskets = basketDAO.getBasketByUserId(userDTO.getUserId());
+        List<Basket> baskets = basketDAO.getBasketByUserId(user.getUserId());
         for (Basket basket : baskets) {
             basketDAO.delete(basket);
         }
     }
 
-
-    @Override
-    @Transactional
-    public List<OrderDTO> getOrdersByUser(String userEmail) {
-        UserDTO userDTO = UserConverter.converter(userDAO.findByEmail(userEmail));
-        List<Order> orders = getOrderByUserId(userDTO.getUserId());
-        List<OrderDTO> orderDTOS = new ArrayList<>();
-        for (Order order : orders) {
-            OrderDTO orderDTO = OrderConverter.converter(order);
-            orderDTOS.add(orderDTO);
-        }
-        return orderDTOS;
-    }
-
-    @Override
-    @Transactional
-    public List<OrderDTO> getOrders(int pageId, int total) {
-        List<Order> orders = getOrdersByParts(pageId, total);
-        List<OrderDTO> orderDTOS = new ArrayList<>();
-        for (Order order : orders) {
-            OrderDTO orderDTO = OrderConverter.converter(order);
-            orderDTOS.add(orderDTO);
-        }
-        return orderDTOS;
-    }
 
     @Override
     @Transactional
@@ -110,21 +161,13 @@ public class OrderServiceImpl implements Orderservice {
 
     @Override
     @Transactional
-    public List<OrderBookTimesDTO> getOrderBooksTimesDTOByOrderId(Integer orderId) {
-        List<OrderBooksTimes> orderBooksTimes = getOrderBooksTimesByOrderId(orderId);
-        List<OrderBookTimesDTO> orderBookTimesDTOS = new ArrayList<>();
-        for (OrderBooksTimes orderBooksTime : orderBooksTimes) {
-            OrderBookTimesDTO orderBookTimesDTO = OrdersBooksTimesConverter.converter(orderBooksTime);
-            orderBookTimesDTOS.add(orderBookTimesDTO);
+    public void deleteFromOrdersBooksTimesById(String[] deletings) {
+        for (String deleting : deletings) {
+            Integer orderBookTimesId = Integer.valueOf(deleting);
+            OrderBooksTimes orderBooksTimes = findOrderBooksTimesById(orderBookTimesId);
+            deleteOrderBooksTimes(orderBooksTimes);
         }
-        return orderBookTimesDTOS;
-    }
 
-    @Override
-    @Transactional
-    public void deleteFromOrdersBooksTimesById(Integer ordersBooksTimesId) {
-        OrderBooksTimes orderBooksTimes = findOrderBooksTimesById(ordersBooksTimesId);
-        deleteOrderBooksTimes(orderBooksTimes);
     }
 
     @Override
@@ -139,42 +182,33 @@ public class OrderServiceImpl implements Orderservice {
     @Transactional
     public void deleteOrder(Integer orderId) {
         Order order = findOrderById(orderId);
-        deleteOrder(order);
-    }
-
-    @Override
-    @Transactional
-    public Integer bookQuantityInOrdersBooksTimes(Integer bookId, Integer orderId) {
-        OrderBooksTimes orderBooksTimes = getOrderBooksTimesByOrderIdAndBookId(bookId, orderId);
-        Integer quantity;
-        if (orderBooksTimes != null) {
-            quantity = orderBooksTimes.getBookQuantity();
-        } else {
-            quantity = 0;
+        List<OrdersBooks> ordersBooks = getOrdersBooksByOrderId(orderId);
+        for (OrdersBooks ordersBook : ordersBooks) {
+            deleteOrdersBooks(ordersBook);
+            List<OrdersBooksDTO> ordersBooks2 = getOrderBooksDTOByBookId(ordersBook.getBookId());
+            Book book = catalogueDAO.findById(ordersBook.getBookId());
+            if (ordersBooks2.isEmpty()) {
+                book.setChangable(Changable.CHANGABLE);
+            } else {
+                book.setChangable(Changable.NOT_CHANGABLE);
+            }
+            deleteOrder(order);
         }
-        return quantity;
     }
 
-    @Override
-    @Transactional
-    public void updateQuantityInOrderBooksTimes(Integer bookId, Integer orderId, Integer quantity) {
-        OrderBooksTimes orderBooksTimes = getOrderBooksTimesByOrderIdAndBookId(bookId, orderId);
-        orderBooksTimes.setBookQuantity(quantity);
-        updateOrderBooksTimes(orderBooksTimes);
-    }
 
     @Override
     @Transactional
     public void addOrderBookTimes(Integer bookid, Integer orderId, Integer bookQuantity) {
-        OrderBooksTimes orderBooksTimes=getOrderBooksTimesByOrderIdAndBookId(orderId,bookid);
+        OrderBooksTimes orderBooksTimes = getOrderBooksTimesByOrderIdAndBookId(orderId, bookid);
         if (orderBooksTimes != null) {
-            orderBooksTimes.setBookQuantity(orderBooksTimes.getBookQuantity()+bookQuantity);
+            orderBooksTimes.setBookQuantity(orderBooksTimes.getBookQuantity() + bookQuantity);
             updateOrderBooksTimes(orderBooksTimes);
         } else {
-            BookDTO bookDTO=BookConverter.converter(catalogueDAO.findById(bookid)) ;
+            BookDTO bookDTO = BookConverter.converter(catalogueDAO.findById(bookid));
             bookDTO.setBookQuantity(bookQuantity);
             Order order = findOrderById(orderId);
-            saveOrderBooksTimes(OrdersBooksTimesConverter.setOrdersBooks(order,bookDTO));
+            saveOrderBooksTimes(OrdersBooksTimesConverter.setOrdersBooks(order, bookDTO));
         }
     }
 
@@ -191,23 +225,22 @@ public class OrderServiceImpl implements Orderservice {
         List<OrdersBooks> ordersBooks = getOrdersBooksByOrderId(orderId);
         for (OrdersBooks ordersBook : ordersBooks) {
             deleteOrdersBooks(ordersBook);
+            List<OrdersBooksDTO> ordersBooks2 = getOrderBooksDTOByBookId(ordersBook.getBookId());
+            Book book = catalogueDAO.findById(ordersBook.getBookId());
+            if (ordersBooks2.isEmpty()) {
+                book.setChangable(Changable.CHANGABLE);
+            } else {
+                book.setChangable(Changable.NOT_CHANGABLE);
+            }
         }
         for (OrderBooksTimes orderBooksTime : orderBooksTimes) {
             OrdersBooks ordersBooks1 = OrderBooksConverter.converter(orderBooksTime);
+            Book book = catalogueDAO.findById(orderBooksTime.getBookid());
+            book.setChangable(Changable.NOT_CHANGABLE);
             ordersBooks1.setOrder(order);
             saveOrderBooks(ordersBooks1);
         }
     }
-
-    @Override
-    @Transactional
-    public List<OrdersBooksDTO> getOrderBooksDTOByOrderId(Integer orderId) {
-        List<OrdersBooks> orderBooks = getOrdersBooksByOrderId(orderId);
-        List<OrdersBooksDTO> orderBooksDTO = new ArrayList<>();
-        OrderBooksConverter.converter(orderBooks, orderBooksDTO);
-        return orderBooksDTO;
-    }
-
 
     @Override
     @Transactional
@@ -236,12 +269,6 @@ public class OrderServiceImpl implements Orderservice {
         updateOrder(order);
     }
 
-    @Override
-    @Transactional
-    public Integer orderQuantity() {
-        Integer quantity = findAllOrders().size();
-        return quantity;
-    }
 
     private void saveOrder(Order order) {
         logger.debug("Saving new order");
@@ -277,6 +304,7 @@ public class OrderServiceImpl implements Orderservice {
         List<OrdersBooks> ordersBooks = ordersBooksDAO.getOrdersBooksByOrderId(orderId);
         return ordersBooks;
     }
+
 
     private List<OrdersBooks> getOrdersBooksByBookId(Integer bookId) {
         logger.debug("Getting OrdersBooks by Book Id");

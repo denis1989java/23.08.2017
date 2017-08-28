@@ -47,4 +47,17 @@ public class OrdersBooksDAOImpl extends GenericDaoImpl<OrdersBooks, Integer> imp
         }
         return ordersBooks;
     }
+    @Override
+    public List<OrdersBooks> getOrdersBooksByUserId(Integer userId){
+        List<OrdersBooks> ordersBooks = null;
+        String hql=resourceBundle.getString("getOrdersBooksByUserId");
+        Query query = getSession().createQuery(hql);
+        query.setParameter("userId", userId);
+        try {
+            ordersBooks = query.list();
+        } catch (NoResultException nre) {
+            logger.error("Exception getOrdersBooksByBookId: no ordersBooks");
+        }
+        return ordersBooks;
+    }
 }
