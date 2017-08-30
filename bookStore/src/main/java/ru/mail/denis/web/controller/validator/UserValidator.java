@@ -8,13 +8,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
-import ru.mail.denis.service.modelDTO.UserDTO;
+import ru.mail.denis.service.model.UserDTO;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by user on 18.08.2017.
+ * Created by Denis Monich on 18.08.2017.
  */
 
 @Component
@@ -58,14 +58,12 @@ public class UserValidator implements Validator {
         if (!matcherPassword.matches()) {
             errors.rejectValue("userPassword", "error.userPassword.regex");
         }
-       try{
-            UserDetails userDetails = userDetailsService.loadUserByUsername(userDTO.getUserEmail());
-           if (userDetails != null) {
-               errors.rejectValue("userEmail", "error.userEmail.exist");
-           }
-       }catch (UsernameNotFoundException e){
-            e.getStackTrace();
-       }
+
+        UserDetails userDetails = userDetailsService.loadUserByUsername(userDTO.getUserEmail());
+        if (userDetails != null) {
+            errors.rejectValue("userEmail", "error.userEmail.exist");
+        }
+
 
        if (!userDTO.getRepeatePassword().equals(userDTO.getUserPassword())){
            errors.rejectValue("repeatePassword", "error.repeatePassword.wrong");

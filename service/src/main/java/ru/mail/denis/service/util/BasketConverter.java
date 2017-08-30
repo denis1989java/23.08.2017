@@ -1,31 +1,18 @@
 package ru.mail.denis.service.util;
 
 import ru.mail.denis.repositories.model.Basket;
-import ru.mail.denis.service.modelDTO.BasketDTO;
-import ru.mail.denis.service.modelDTO.BookDTO;
+import ru.mail.denis.service.model.BasketDTO;
+import ru.mail.denis.service.model.BookDTO;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by user on 24.08.2017.
+ * Created by Denis Monich on 24.08.2017.
  */
 public class BasketConverter {
-    public BasketConverter() {
-    }
 
-    public static Basket  converter(BasketDTO basketDTO){
-        Basket basket = new Basket();
-        basket.setBookId(basketDTO.getBookId());
-        basket.setBookQuantity(basketDTO.getBookQuantity());
-        basket.setBasketId(basketDTO.getBasketId());
-        basket.setBookPrice(basketDTO.getBookPrice());
-        basket.setUser(basketDTO.getUser());
-        basket.setBookName(basketDTO.getBookName());
-        return basket;
-    }
-
-    public static BasketDTO converter (Basket basket){
+    private static BasketDTO converter (Basket basket){
         BasketDTO basketDTO = new BasketDTO();
         basketDTO.setBookId(basket.getBookId());
         basketDTO.setBasketId(basket.getBasketId());
@@ -45,12 +32,5 @@ public class BasketConverter {
         return basketDTOS;
     }
 
-    public static BasketDTO setBasketDTO (BookDTO bookDTO, Integer bookQuantity){
-        BasketDTO basketDTO = new BasketDTO();
-        basketDTO.setBookName(bookDTO.getBookName());
-        basketDTO.setBookQuantity(bookQuantity);
-        basketDTO.setBookPrice(bookDTO.getBookPrice());
-        basketDTO.setBookId(bookDTO.getBookId());
-        return basketDTO;
-    }
+
 }

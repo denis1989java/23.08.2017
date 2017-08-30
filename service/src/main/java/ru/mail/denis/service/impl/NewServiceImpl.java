@@ -4,30 +4,40 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.FileCopyUtils;
+import ru.mail.denis.repositories.NewsFotoDAO;
 import ru.mail.denis.repositories.model.News;
 import ru.mail.denis.repositories.NewsDAO;
-import ru.mail.denis.service.modelDTO.NewsDTO;
-import ru.mail.denis.service.modelDTO.ViewDTO;
+import ru.mail.denis.repositories.model.NewFoto;
+import ru.mail.denis.service.model.NewsDTO;
+import ru.mail.denis.service.model.ViewDTO;
 import ru.mail.denis.service.NewService;
+import ru.mail.denis.service.util.DateConverter;
 import ru.mail.denis.service.util.NewsConverter;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 
 /**
- * Created by user on 25.06.2017.
+ * Created by Denis Monich on 25.06.2017.
  */
 @Service
 public class NewServiceImpl implements NewService {
 
     private final NewsDAO newsDAO;
+    private final NewsFotoDAO newsFotoDAO;
     private static final Logger logger = Logger.getLogger(NewServiceImpl.class);
+    private Properties properties;
 
     @Autowired
-    public NewServiceImpl(NewsDAO newsDAO) {
+    public NewServiceImpl(NewsDAO newsDAO, NewsFotoDAO newsFotoDAO, Properties properties) {
         this.newsDAO = newsDAO;
+        this.newsFotoDAO = newsFotoDAO;
+        this.properties = properties;
     }
 
 
@@ -38,16 +48,16 @@ public class NewServiceImpl implements NewService {
         if (page != 0) {
             page = page * total;
         }
-        List<NewsDTO> newsDTOS=NewsConverter.converter(getNewsByParts(page, total));
-        Integer newsQuantity =findAll().size();
-        List<Integer> pagination = new ArrayList();
-        Integer pageQuantity = 0;
+        List<NewsDTO> newsDTOS=converter(getNewsByParts(page, total));
+        Long newsQuantity =newsQuantity();
+        List<Long> pagination = new ArrayList();
+        Long pageQuantity = Long.valueOf(0);
         if (newsQuantity % total == 0) {
             pageQuantity = newsQuantity / total;
         } else {
             pageQuantity = newsQuantity / total + 1;
         }
-        for (Integer i = 0; i < pageQuantity; i++) {
+        for (Long i = Long.valueOf(0); i < pageQuantity; i++) {
             pagination.add(i);
         }
         Map <String,Object> map=new HashMap<>();
@@ -65,6 +75,8 @@ public class NewServiceImpl implements NewService {
         return NewsConverter.converter(findById(newsId));
     }
 
+
+
     @Override
     @Transactional
     public void deleteNew(Integer newsId) {
@@ -75,27 +87,34 @@ public class NewServiceImpl implements NewService {
     @Transactional
     public void updateNew(NewsDTO newsDTO) {
         newsDTO.setNewsId(newsDTO.getNewsId());
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        Date date = new Date();
-        newsDTO.setNewsDate(dateFormat.format(date));
+        newsDTO.setNewsDate(DateConverter.converter());
         updateNews(NewsConverter.converter(newsDTO));
+    }
+    @Override
+    @Transactional
+    public File findNewsFotoById(Integer id){
+        NewFoto newFoto =newsFotoDAO.findById(id);
+        return new File(newFoto.getFotoLocation());
     }
 
     @Override
     @Transactional
     public void addNew(NewsDTO newsDTO) {
-        saveNews(NewsConverter.converter(newsDTO));
+        newsDTO.setNewsDate(DateConverter.converter());
+        News news=NewsConverter.converter(newsDTO);
+        try {
+            NewFoto newFoto = getNewsFoto(newsDTO);
+            news.setFoto(newFoto);
+            saveNews(news);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    private List<News> findAll() {
-        logger.debug("Finding all news");
-        List<News> news = newsDAO.findAll();
-        return news;
-    }
 
     private void delete(News news) {
 
-        logger.debug("Deleting new");
+        logger.debug("Deleting new"+news.getNewsId());
         newsDAO.delete(news);
     }
 
@@ -106,15 +125,20 @@ public class NewServiceImpl implements NewService {
     }
 
     private void updateNews(News news) {
-        logger.debug("Updating new");
+        logger.debug("Updating new" +news.getNewsId());
         newsDAO.update(news);
     }
 
     private News findById(Integer id) {
-
-        logger.debug("Finding new by id");
+        logger.debug("Finding new by id" +id);
         News news = newsDAO.findById(id);
         return news;
+    }
+
+    private Long newsQuantity () {
+        logger.debug("Finding news quantity");
+        Long quantity = newsDAO.getNewsQuantity();
+        return quantity;
     }
 
     private List<News> getNewsByParts(Integer pageId, Integer total) {
@@ -122,5 +146,25 @@ public class NewServiceImpl implements NewService {
         logger.debug("Getting news by parts");
         List<News> news = newsDAO.getNewsByParts(pageId, total);
         return news;
+    }
+
+
+
+    private NewFoto getNewsFoto(NewsDTO newsDTO) throws IOException {
+        String fileLocation = properties.getProperty("upload.location") + System.currentTimeMillis() +".jpg";
+        FileCopyUtils.copy(newsDTO.getNewsFoto().getBytes(), new File(fileLocation));
+        NewFoto newFoto = new NewFoto();
+        newFoto.setFotoLocation(fileLocation);
+        newFoto.setFotoName(newsDTO.getNewsFoto().getName());
+        return newFoto;
+    }
+
+    private List<NewsDTO> converter(List<News>news){
+        List<NewsDTO> newsDTOS = new ArrayList<>();
+        for (News new1 : news) {
+            NewsDTO newsDTO = NewsConverter.converter(new1);
+            newsDTOS.add(newsDTO);
+        }
+        return newsDTOS;
     }
 }

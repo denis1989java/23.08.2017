@@ -8,8 +8,8 @@ import ru.mail.denis.repositories.model.Book;
 import ru.mail.denis.repositories.CatalogueDAO;
 import ru.mail.denis.repositories.model.Changable;
 import ru.mail.denis.service.CatalogueService;
-import ru.mail.denis.service.modelDTO.BookDTO;
-import ru.mail.denis.service.modelDTO.ViewDTO;
+import ru.mail.denis.service.model.BookDTO;
+import ru.mail.denis.service.model.ViewDTO;
 import ru.mail.denis.service.util.BookConverter;
 
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ import java.util.Map;
 
 
 /**
- * Created by user on 25.06.2017.
+ * Created by Denis Monich on 25.06.2017.
  */
 @Service
 public class CatalogueServiceImpl implements CatalogueService {
@@ -39,23 +39,21 @@ public class CatalogueServiceImpl implements CatalogueService {
         if (page != 0) {
             page = page * total;
         }
-        List<BookDTO> bookDTOS=BookConverter.converter(getcatalogueByParts(page, total));
-        Integer booksQuantity =findAll().size();
-        List<Integer> pagination = new ArrayList();
-        Integer pageQuantity = 0;
+        List<BookDTO> bookDTOS=converter(getcatalogueByParts(page, total));
+        Long booksQuantity =catalogueQuantity();
+        List<Long> pagination = new ArrayList();
+        Long pageQuantity = Long.valueOf(0);
         if (booksQuantity % total == 0) {
             pageQuantity = booksQuantity / total;
         } else {
             pageQuantity = booksQuantity / total + 1;
         }
-        for (Integer i = 0; i < pageQuantity; i++) {
+        for (Long i = Long.valueOf(0); i < pageQuantity; i++) {
             pagination.add(i);
         }
         Map<String,Object> map=new HashMap<>();
         map.put("catalogue",bookDTOS);
         map.put("pagination",pagination);
-        map.put("CHANGABLE","CHANGABLE");
-        map.put("orderId", orderId);
         ViewDTO viewDTO=new ViewDTO();
         viewDTO.setViewMap(map);
         return viewDTO;
@@ -86,14 +84,14 @@ public class CatalogueServiceImpl implements CatalogueService {
         saveBook(BookConverter.converter(bookDTO));
     }
 
-    private List<Book> findAll() {
-        logger.debug("Finding all books");
-        List<Book> catalogue = catalogueDAO.findAll();
-        return catalogue;
+    private Long catalogueQuantity () {
+        logger.debug("Finding books quantity");
+        Long quantity = catalogueDAO.getCatalogueQuantity();
+        return quantity;
     }
 
     private void deleteBook(Book book) {
-        logger.debug("Deleting Book");
+        logger.debug("Deleting Book"+book.getBookId());
         catalogueDAO.delete(book);
     }
 
@@ -103,12 +101,12 @@ public class CatalogueServiceImpl implements CatalogueService {
     }
 
     private void updateBook(Book book) {
-        logger.debug("Updating book");
+        logger.debug("Updating book" +book.getBookId());
         catalogueDAO.update(book);
     }
 
     private Book findById(Integer id) {
-        logger.debug("Finding book by id");
+        logger.debug("Finding book by id"+id);
         Book book = catalogueDAO.findById(id);
         return book;
     }
@@ -117,6 +115,14 @@ public class CatalogueServiceImpl implements CatalogueService {
         logger.debug("Getting Catalogue by parts");
         List<Book> catalogue = catalogueDAO.getCatalogueByParts(pageId, total);
         return catalogue;
+    }
+    private List<BookDTO> converter (List<Book> books){
+        List<BookDTO> bookDTOS = new ArrayList<>();
+        for (Book book : books) {
+            BookDTO bookDTO = BookConverter.converter(book);
+            bookDTOS.add(bookDTO);
+        }
+        return bookDTOS;
     }
 
 }

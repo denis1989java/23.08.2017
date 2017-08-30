@@ -1,18 +1,17 @@
 package ru.mail.denis.repositories.model;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 /**
- * Created by user on 28.07.2017.
+ * Created by Denis Monich on 28.07.2017.
  */
 public class OrderBooksTimes implements Serializable {
     private static final long serialVersionUID = 1342688136445692504L;
     private Integer ordersBooksTimesId;
     private String bookName;
     private Integer bookid;
-    private BigDecimal bookPrice;
-    private Integer bookQuantity;
+    private String bookPrice;
+    private String bookQuantity;
     private Order order;
 
     public Integer getOrdersBooksTimesId() {
@@ -39,19 +38,19 @@ public class OrderBooksTimes implements Serializable {
         this.bookid = bookTimesID;
     }
 
-    public BigDecimal getBookPrice() {
+    public String getBookPrice() {
         return bookPrice;
     }
 
-    public void setBookPrice(BigDecimal bookPrice) {
+    public void setBookPrice(String bookPrice) {
         this.bookPrice = bookPrice;
     }
 
-    public Integer getBookQuantity() {
+    public String getBookQuantity() {
         return bookQuantity;
     }
 
-    public void setBookQuantity(Integer bookTimesQUANTITY) {
+    public void setBookQuantity(String bookTimesQUANTITY) {
         this.bookQuantity = bookTimesQUANTITY;
     }
 

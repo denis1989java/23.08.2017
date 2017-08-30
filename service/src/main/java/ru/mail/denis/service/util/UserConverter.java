@@ -1,18 +1,16 @@
 package ru.mail.denis.service.util;
 
 import ru.mail.denis.repositories.model.User;
-import ru.mail.denis.service.modelDTO.UserDTO;
+import ru.mail.denis.service.model.UserDTO;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by user on 24.08.2017.
+ * Created by Denis Monich on 24.08.2017.
  */
 public class UserConverter {
 
-    public UserConverter() {
-    }
 
     public static User converter (UserDTO userDTO){
         User user = new User();
@@ -34,12 +32,5 @@ public class UserConverter {
         return userDTO;
     }
 
-    public static List<UserDTO> converter(List <User> users){
-        List<UserDTO> usersDTO = new ArrayList<>();
-        for (User user : users) {
-            UserDTO userDTO = UserConverter.converter(user);
-            usersDTO.add(userDTO);
-        }
-        return usersDTO;
-    }
+
 }

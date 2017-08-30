@@ -55,7 +55,7 @@
             padding: 10px;
             float: right;
             color: white;
-            border: 1px solid white;
+            borderId: 1px solid white;
             background-color: black;
         }
 
@@ -226,7 +226,7 @@
                                     </td>
                                     <td>
                                         <c:choose>
-                                            <c:when test="${book.changable eq viewDTO.viewMap['CHANGABLE']}">
+                                            <c:when test="${book.changable  == 'CHANGABLE' }">
                                                 <spring:url value="/admin/deleteBook/${book.bookId}" var="deleteBook"/>
                                                 <button style="background-color: #e13612" class="btn btn-info"
                                                         onclick="location.href='${deleteBook}'">Delete book
@@ -247,7 +247,7 @@
                                 </security:authorize>
                                 <security:authorize access="hasAuthority('SUPER_ADMIN')">
                                     <td><c:choose>
-                                        <c:when test="${book.changable eq viewDTO.viewMap['CHANGABLE']}">
+                                        <c:when test="${book.changable  == 'CHANGABLE'}">
                                             <spring:url value="/superAdmin/changeBook/${book.bookId}" var="changeBook"/>
                                             <button style="background-color: #e13612" class="btn btn-info"
                                                     onclick="location.href='${changeBook}'">Change book
@@ -260,7 +260,7 @@
                                     </td>
                                     <td>
                                         <c:choose>
-                                            <c:when test="${book.changable eq viewDTO.viewMap['CHANGABLE']}">
+                                            <c:when test="${book.changable  == 'CHANGABLE'}">
                                                 <spring:url value="/superAdmin/deleteBook/${book.bookId}"
                                                             var="deleteBook"/>
                                                 <button style="background-color: #e13612" class="btn btn-info"
@@ -305,12 +305,12 @@
                 <div class="pagination">
                     <security:authorize access="hasAuthority('USER')">
                         <c:forEach var="page" items="${viewDTO.viewMap['pagination']}">
-                            <li><a href="${page}">${page+1}</a></li>
+                            <li><a href="?page=${page}">${page+1}</a></li>
                         </c:forEach>
                     </security:authorize>
                     <security:authorize access="hasAuthority('ADMIN') || hasAuthority('SUPER_ADMIN')">
                         <c:forEach var="page" items="${viewDTO.viewMap['pagination']}">
-                            <li><a href="${page}">${page+1}</a></li>
+                            <li><a href="?page=${page}">${page+1}</a></li>
                         </c:forEach>
                     </security:authorize>
                 </div>

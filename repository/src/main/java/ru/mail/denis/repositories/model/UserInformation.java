@@ -3,7 +3,7 @@ package ru.mail.denis.repositories.model;
 import java.io.Serializable;
 
 /**
- * Created by user on 30.06.2017.
+ * Created by Denis Monich on 30.06.2017.
  */
 public class UserInformation implements Serializable {
 

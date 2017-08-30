@@ -231,12 +231,12 @@
                 <div class="pagination">
                     <security:authorize access="hasAuthority('USER')">
                         <c:forEach var="page" items="${viewDTO.viewMap['pagination']}">
-                            <li><a href="${page}">${page+1}</a></li>
+                            <li><a href="?page=${page}">${page+1}</a></li>
                         </c:forEach>
                     </security:authorize>
                     <security:authorize access="hasAuthority('ADMIN') || hasAuthority('SUPER_ADMIN')">
                         <c:forEach var="page" items="${viewDTO.viewMap['pagination']}">
-                            <li><a href="${page}">${page+1}</a></li>
+                            <li><a href="?page=${page}">${page+1}</a></li>
                         </c:forEach>
                     </security:authorize>
                 </div>

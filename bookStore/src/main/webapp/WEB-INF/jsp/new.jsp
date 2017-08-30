@@ -153,8 +153,7 @@
                 <a style="color:yellow"><p style=""><c:out value="${news.newsDate}"/></p></a>
                 <a style="color:palevioletred"><p style=""><c:out value="${news.newsName}"/></p></a>
                 <a style="color: white"><p><c:out value="${news.newsText}"/></p></a>
-                <img class="img-fluid"
-                     src="${pageContext.request.contextPath}/resources/images/${news.newsFoto}"/>
+                <img  height="200" width="300" src="${pageContext.request.contextPath}/download/<c:out value="${news.newsId}" />">
             </div>
         </div>
     </div>

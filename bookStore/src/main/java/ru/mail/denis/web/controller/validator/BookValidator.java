@@ -4,14 +4,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
-import ru.mail.denis.service.modelDTO.BookDTO;
+import ru.mail.denis.service.model.BookDTO;
 
 import java.math.BigDecimal;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by user on 22.08.2017.
+ * Created by Denis Monich on 22.08.2017.
  */
 
 @Component
@@ -54,14 +54,14 @@ public class BookValidator implements Validator {
         }
         if (bookDTO.getBookQuantity()!=null){
             try{
-                Integer bookQuantity= bookDTO.getBookQuantity();
+                Integer bookQuantity= Integer.valueOf(bookDTO.getBookQuantity());
             }catch (NumberFormatException e){
                 errors.rejectValue("bookQuantity", "error.bookQuantity.regex");
             }
         }
         if (bookDTO.getBookPrice()!=null){
             try{
-                BigDecimal bookPrice= bookDTO.getBookPrice();
+                BigDecimal bookPrice= new BigDecimal( bookDTO.getBookPrice());
             }catch (NumberFormatException e){
                 errors.rejectValue("bookPrice", "error.bookPrice.regex");
             }

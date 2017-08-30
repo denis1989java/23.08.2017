@@ -8,7 +8,7 @@
             <column name="F_BOOK_ID" length="5"/>
             <generator class="identity"/>
         </id>
-        <property name="bookQuantity" type="java.lang.Integer">
+        <property name="bookQuantity" type="string">
             <column name="F_BOOK_QUANTITY" length="10"/>
         </property>
         <property name="bookName" type="string">
@@ -20,7 +20,7 @@
         <property name="bookDescription" type="string">
             <column name="F_BOOK_DESCRIPTION" length="45"/>
         </property>
-        <property name="bookPrice" type="java.math.BigDecimal">
+        <property name="bookPrice" type="string">
             <column name="F_BOOK_PRICE"/>
         </property>
         <property name="changable">

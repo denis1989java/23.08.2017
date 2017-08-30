@@ -4,13 +4,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
-import ru.mail.denis.service.modelDTO.MessageDTO;
+import ru.mail.denis.service.model.MessageDTO;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by user on 28.08.2017.
+ * Created by Denis Monich on 28.08.2017.
  */
 @Component
 public class MessageValidator implements Validator {

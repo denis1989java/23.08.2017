@@ -1,17 +1,16 @@
 package ru.mail.denis.service.util;
 
 import ru.mail.denis.repositories.model.Book;
-import ru.mail.denis.service.modelDTO.BookDTO;
+import ru.mail.denis.service.model.BookDTO;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by user on 24.08.2017.
+ * Created by Denis Monich on 24.08.2017.
  */
 public class BookConverter {
-    public BookConverter() {
-    }
+
 
     public static Book converter (BookDTO bookDTO){
         Book book = new Book();
@@ -37,12 +36,4 @@ public class BookConverter {
         return bookDTO;
     }
 
-    public static List<BookDTO> converter (List<Book> books){
-        List<BookDTO> bookDTOS = new ArrayList<>();
-        for (Book book : books) {
-            BookDTO bookDTO = BookConverter.converter(book);
-            bookDTOS.add(bookDTO);
-        }
-        return bookDTOS;
-    }
 }

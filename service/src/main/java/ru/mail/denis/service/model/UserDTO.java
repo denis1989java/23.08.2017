@@ -1,4 +1,4 @@
-package ru.mail.denis.service.modelDTO;
+package ru.mail.denis.service.model;
 
 
 
@@ -9,7 +9,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 /**
- * Created by user on 13.07.2017.
+ * Created by Denis Monich on 13.07.2017.
  */
 public class UserDTO implements Serializable {
 

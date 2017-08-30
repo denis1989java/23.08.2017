@@ -1,10 +1,10 @@
-package ru.mail.denis.service.modelDTO;
+package ru.mail.denis.service.model;
 
 import java.io.Serializable;
 import java.util.Map;
 
 /**
- * Created by user on 27.08.2017.
+ * Created by Denis Monich on 27.08.2017.
  */
 public class ViewDTO implements Serializable {
     private Map <String,Object> viewMap;

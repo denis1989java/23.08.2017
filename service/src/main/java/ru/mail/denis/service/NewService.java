@@ -1,10 +1,12 @@
 package ru.mail.denis.service;
 
-import ru.mail.denis.service.modelDTO.NewsDTO;
-import ru.mail.denis.service.modelDTO.ViewDTO;
+import ru.mail.denis.service.model.NewsDTO;
+import ru.mail.denis.service.model.ViewDTO;
+
+import java.io.File;
 
 /**
- * Created by user on 05.07.2017.
+ * Created by Denis Monich on 05.07.2017.
  */
 public interface NewService {
 
@@ -16,6 +18,8 @@ public interface NewService {
     void deleteNew(Integer newsId);
 
     void updateNew(NewsDTO newsDTO);
+
+    File findNewsFotoById(Integer id);
 
     void addNew(NewsDTO newsDTO);
 

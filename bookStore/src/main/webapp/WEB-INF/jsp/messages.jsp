@@ -176,13 +176,13 @@
                                             <td style="color: #FFFFFF">
                                                 <table>
                                                     <tr>
-                                                        <th style="color: black">User role</th>
-                                                        <th style="color: black">User Status</th>
+                                                        <th style="color: #FFFFFF">User role</th>
+                                                        <th style="color: #FFFFFF">User Status</th>
                                                     </tr>
                                                     <tr>
-                                                        <th style="color: black"><c:out
+                                                        <th style="color: #FFFFFF"><c:out
                                                                 value="${viewDTO.viewMap['userDTO'].userRole}"></c:out></th>
-                                                        <th style="color: black"><c:out
+                                                        <th style="color: #FFFFFF"><c:out
                                                                 value="${viewDTO.viewMap['userDTO'].userStatus}"></c:out></th>
                                                     </tr>
                                                 </table>
@@ -211,7 +211,7 @@
             <div class="col-md-5">
                 <div class="pagination">
                     <c:forEach var="page" items="${ viewDTO.viewMap['pagination']}">
-                        <li><a href="${page}">${page+1}</a></li>
+                        <li><a href="?page=${page}">${page+1}</a></li>
                     </c:forEach>
                 </div>
             </div>

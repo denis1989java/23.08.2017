@@ -4,7 +4,7 @@ package ru.mail.denis.repositories.model;
 import java.io.Serializable;
 
 /**
- * Created by user on 25.06.2017.
+ * Created by Denis Monich on 25.06.2017.
  */
 public class News implements Serializable {
 
@@ -13,7 +13,7 @@ public class News implements Serializable {
     private Integer newsId;
     private String newsName;
     private String newsText;
-    private String newsFoto;
+    private NewFoto foto;
     private String newsDate;
 
 
@@ -44,12 +44,12 @@ public class News implements Serializable {
         this.newsText = newsText;
     }
 
-    public String getNewsFoto() {
-        return newsFoto;
+    public NewFoto getFoto() {
+        return foto;
     }
 
-    public void setNewsFoto(String newsFoto) {
-        this.newsFoto = newsFoto;
+    public void setFoto(NewFoto foto) {
+        this.foto = foto;
     }
 
     public String getNewsDate() {
@@ -66,7 +66,7 @@ public class News implements Serializable {
                 "newsId=" + newsId +
                 ", newsName='" + newsName + '\'' +
                 ", newsText='" + newsText + '\'' +
-                ", newsFoto='" + newsFoto + '\'' +
+                ", foto='" + foto + '\'' +
                 ", newsDate='" + newsDate + '\'' +
                 '}';
     }

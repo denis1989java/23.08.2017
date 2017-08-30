@@ -1,12 +1,11 @@
-package ru.mail.denis.service.modelDTO;
+package ru.mail.denis.service.model;
 
 import ru.mail.denis.repositories.model.User;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 /**
- * Created by user on 27.07.2017.
+ * Created by Denis Monich on 27.07.2017.
  */
 public class BasketDTO implements Serializable {
 
@@ -14,8 +13,8 @@ public class BasketDTO implements Serializable {
     private Integer basketId;
     private Integer bookId;
     private String bookName;
-    private Integer bookQuantity;
-    private BigDecimal bookPrice;
+    private String bookQuantity;
+    private String bookPrice;
     private User user;
 
     public Integer getBookId() {
@@ -42,19 +41,19 @@ public class BasketDTO implements Serializable {
         this.bookName = bookName;
     }
 
-    public Integer getBookQuantity() {
+    public String getBookQuantity() {
         return bookQuantity;
     }
 
-    public void setBookQuantity(Integer bookQuantity) {
+    public void setBookQuantity(String bookQuantity) {
         this.bookQuantity = bookQuantity;
     }
 
-    public BigDecimal getBookPrice() {
+    public String getBookPrice() {
         return bookPrice;
     }
 
-    public void setBookPrice(BigDecimal bookPrice) {
+    public void setBookPrice(String bookPrice) {
         this.bookPrice = bookPrice;
     }
 

@@ -2,17 +2,16 @@ package ru.mail.denis.service.impl;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.mail.denis.repositories.UserDAO;
 import ru.mail.denis.repositories.model.Basket;
 import ru.mail.denis.repositories.model.User;
 import ru.mail.denis.repositories.BasketDAO;
 import ru.mail.denis.repositories.CatalogueDAO;
 import ru.mail.denis.service.BasketService;
-import ru.mail.denis.service.modelDTO.BasketDTO;
-import ru.mail.denis.service.modelDTO.BookDTO;
-import ru.mail.denis.service.modelDTO.UserDTO;
-import ru.mail.denis.service.modelDTO.ViewDTO;
+import ru.mail.denis.service.model.*;
 import ru.mail.denis.service.util.BasketConverter;
 import ru.mail.denis.service.util.BookConverter;
 import ru.mail.denis.service.util.UserConverter;
@@ -24,30 +23,33 @@ import java.util.Map;
 
 
 /**
- * Created by user on 26.06.2017.
+ * Created by Denis Monich on 26.06.2017.
  */
 @Service
 public class BasketServiceImpl implements BasketService {
     private final BasketDAO basketDAO;
     private final CatalogueDAO catalogueDAO;
+    private final UserDAO userDAO;
     private static final Logger logger = Logger.getLogger(BasketServiceImpl.class);
     @Autowired
     public BasketServiceImpl(
             BasketDAO basketDAO,
-            CatalogueDAO catalogueDAO) {
+            CatalogueDAO catalogueDAO, UserDAO userDAO) {
         this.basketDAO = basketDAO;
         this.catalogueDAO = catalogueDAO;
+        this.userDAO = userDAO;
     }
 
 
     @Override
     @Transactional
-    public ViewDTO viewPage(Integer userId){
-        List<BasketDTO> basket= BasketConverter.converter(getBasketByUserId(userId));
+    public ViewDTO viewPage(){
+        UserDTO userDTO=getUser();
+        List<BasketDTO> basket= BasketConverter.converter(getBasketByUserId(userDTO.getUserId()));
         BigDecimal summ = BigDecimal.ZERO;
         for (int i = 0; i < basket.size(); i++) {
-            BigDecimal price = basket.get(i).getBookPrice();
-            Integer quantity = basket.get(i).getBookQuantity();
+            BigDecimal price =new BigDecimal(basket.get(i).getBookPrice()) ;
+            String quantity = basket.get(i).getBookQuantity();
             summ = summ.add(price.multiply(new BigDecimal(quantity))) ;
         }
         Map<String,Object> map=new HashMap<>();
@@ -71,7 +73,7 @@ public class BasketServiceImpl implements BasketService {
 
     @Override
     @Transactional
-    public void changeBookQuantityInBasket(Integer newQuantity, Integer basketId) {
+    public void changeBookQuantityInBasket(String newQuantity, Integer basketId) {
         Basket basket = findById(basketId);
         basket.setBookQuantity(newQuantity);
         updateBasket(basket);
@@ -79,20 +81,21 @@ public class BasketServiceImpl implements BasketService {
 
     @Override
     @Transactional
-    public void addToBasket(Integer bookId, UserDTO userDTO, Integer bookQuantity){
+    public void addToBasket(Integer bookId, String bookQuantity){
+        UserDTO userDTO=getUser();
         Basket basket = getBasketByUserIdAndBookId(userDTO.getUserId(), bookId);
         Integer bookQuantityInBasket;
         if (basket != null) {
-            bookQuantityInBasket = basket.getBookQuantity();
+            bookQuantityInBasket = Integer.valueOf(basket.getBookQuantity());
         } else {
             bookQuantityInBasket = 0;
         }
         if (bookQuantityInBasket != 0) {
-            basket.setBookQuantity(bookQuantityInBasket+bookQuantity);
+            basket.setBookQuantity( String.valueOf(bookQuantityInBasket+Integer.parseInt(bookQuantity)));
             updateBasket(basket);
         } else {
             BookDTO bookDTO = BookConverter.converter(catalogueDAO.findById(bookId));
-            Basket newBasket =BasketConverter.converter(BasketConverter.setBasketDTO(bookDTO,bookQuantity));
+            Basket newBasket =converter(setBasketDTO(bookDTO,bookQuantity));
             User user= UserConverter.converter(userDTO);
             newBasket.setUser(user);
             saveBasket(newBasket);
@@ -101,7 +104,7 @@ public class BasketServiceImpl implements BasketService {
     }
 
     private void delete(Basket basket) {
-        logger.debug("Deleting basket");
+        logger.debug("Deleting basket"+basket.getBasketId());
         basketDAO.delete(basket);
     }
 
@@ -111,19 +114,19 @@ public class BasketServiceImpl implements BasketService {
     }
 
     private void updateBasket(Basket basket) {
-        logger.debug("updating basket");
+        logger.debug("updating basket"+basket.getBasketId());
         basketDAO.update(basket);
     }
 
     private Basket findById(Integer id) {
-        logger.debug("Finding Basket by id");
+        logger.debug("Finding Basket by id" + id);
         Basket basket = basketDAO.findById(id);
         return basket;
     }
 
 
     private Basket getBasketByUserIdAndBookId(Integer userId, Integer bookId) {
-        logger.debug("Getting basket by User id and Book id");
+        logger.debug("Getting basket by User id and Book id"+userId+ " AND "+ bookId);
         Basket basket = basketDAO.getBasketByUserIdAndBookId(userId, bookId);
         return basket;
     }
@@ -131,9 +134,34 @@ public class BasketServiceImpl implements BasketService {
 
     private List<Basket> getBasketByUserId(Integer userId) {
 
-        logger.debug("Getting basket by User id");
+        logger.debug("Getting basket by User id"+userId);
         List<Basket> baskets = basketDAO.getBasketByUserId(userId);
         return baskets;
+    }
+
+    private UserDTO getUser() {
+        AppUserPrincipal principal = (AppUserPrincipal) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+        return UserConverter.converter(userDAO.findById(principal.getUserId())) ;
+    }
+    private  Basket  converter(BasketDTO basketDTO){
+        Basket basket = new Basket();
+        basket.setBookId(basketDTO.getBookId());
+        basket.setBookQuantity(basketDTO.getBookQuantity());
+        basket.setBasketId(basketDTO.getBasketId());
+        basket.setBookPrice(basketDTO.getBookPrice());
+        basket.setUser(basketDTO.getUser());
+        basket.setBookName(basketDTO.getBookName());
+        return basket;
+    }
+    private  BasketDTO setBasketDTO (BookDTO bookDTO, String bookQuantity){
+        BasketDTO basketDTO = new BasketDTO();
+        basketDTO.setBookName(bookDTO.getBookName());
+        basketDTO.setBookQuantity(bookQuantity);
+        basketDTO.setBookPrice(bookDTO.getBookPrice());
+        basketDTO.setBookId(bookDTO.getBookId());
+        return basketDTO;
     }
 
 }

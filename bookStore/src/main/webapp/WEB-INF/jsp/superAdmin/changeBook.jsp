@@ -138,6 +138,9 @@
                         <p class="bg-danger"><form:errors path="bookDescription"/></p>
                     </div>
                     <div class="form-inline">
+                        <form:input type="hidden" id="changable" path="changable" name="changable" class="form-control"/>
+                    </div>
+                    <div class="form-inline">
                         <button type="submit" class="btn btn-primary btn-block">Update book</button>
                     </div>
                 </form:form>

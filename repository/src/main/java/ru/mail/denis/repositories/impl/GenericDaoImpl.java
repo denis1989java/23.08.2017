@@ -12,7 +12,7 @@ import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 /**
- * Created by user on 04.08.2017.
+ * Created by Denis Monich on 04.08.2017.
  */
 @SuppressWarnings("unchecked")
 @Repository
@@ -51,6 +51,10 @@ public abstract class GenericDaoImpl<T, ID extends Serializable> implements Gene
     @Override
     public void update(T entity) {
         getSession().update(entity);
+    }
+    @Override
+    public void merge (T entity){
+        getSession().merge(entity);
     }
 
     @Override

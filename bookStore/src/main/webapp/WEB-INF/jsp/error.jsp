@@ -7,7 +7,7 @@
 <p>Application has encountered an error. Please contact support on ...</p>
 
 Failed URL: ${url}
-Exception: ${exception.messageText}
+Exception: ${exception}
 <c:forEach items="${exception.stackTrace}" var="ste">
     ${ste}}
 </c:forEach>

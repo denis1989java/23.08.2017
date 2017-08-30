@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mail.denis.repositories.model.User;
 import ru.mail.denis.repositories.UserDAO;
-import ru.mail.denis.service.modelDTO.AppUserPrincipal;
+import ru.mail.denis.service.model.AppUserPrincipal;
 
 /**
- * Created by user on 15.08.2017.
+ * Created by Denis Monich on 15.08.2017.
  */
 @Service(value = "appUserDetailsService")
 public class AppUserDetailsServiceImpl implements UserDetailsService {
@@ -28,7 +28,7 @@ public class AppUserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) {
         User user = userDao.findByEmail(username);
         if (user == null) {
-            throw new UsernameNotFoundException(username);
+            return null;
         }
         return new AppUserPrincipal(user);
     }

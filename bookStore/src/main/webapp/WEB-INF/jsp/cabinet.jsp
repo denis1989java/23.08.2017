@@ -65,11 +65,11 @@
 
                 <security:authorize access="hasAuthority('USER')">
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/user/news/0">news</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/user/news?page=0">news</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link"
-                           href="${pageContext.request.contextPath}/user/catalogue/0">catalogue</a>
+                           href="${pageContext.request.contextPath}/user/catalogue?page=0">catalogue</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="${pageContext.request.contextPath}/user/profile">my profile</a>
@@ -86,14 +86,14 @@
                 </security:authorize>
                 <security:authorize access="hasAuthority('ADMIN')">
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/admin/messages/0">messages</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/admin/messages?page=0">messages</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/admin/news/0">news</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/admin/news?page=0">news</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link"
-                           href="${pageContext.request.contextPath}/admin/catalogue/0">catalogue</a>
+                           href="${pageContext.request.contextPath}/admin/catalogue?page=0">catalogue</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="${pageContext.request.contextPath}/admin/profile">my profile</a>
@@ -107,7 +107,7 @@
                 </security:authorize>
                 <security:authorize access="hasAuthority('SUPER_ADMIN')">
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/messages/0">messages</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/messages?page=0">messages</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link"
@@ -115,11 +115,11 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link"
-                           href="${pageContext.request.contextPath}/superAdmin/news/0">news</a>
+                           href="${pageContext.request.contextPath}/superAdmin/news?page=0">news</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link"
-                           href="${pageContext.request.contextPath}/superAdmin/catalogue/0">catalogue</a>
+                           href="${pageContext.request.contextPath}/superAdmin/catalogue?page=0">catalogue</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/profile">my

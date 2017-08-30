@@ -6,9 +6,7 @@
     <class name="ru.mail.denis.repositories.model.UserInformation" table="T_USER_INFORMATION">
         <id name="userId" type="java.lang.Integer">
             <column name="f_user_id"/>
-            <generator class="foreign">
-                <param name="property">user</param>
-            </generator>
+            <generator class="identity"/>
         </id>
         <property name="userName" type="string">
             <column name="F_USER_NAME" length="50"/>

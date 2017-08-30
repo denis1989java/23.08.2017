@@ -1,16 +1,18 @@
-package ru.mail.denis.service.modelDTO;
+package ru.mail.denis.service.model;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
 
 /**
- * Created by user on 31.07.2017.
+ * Created by Denis Monich on 31.07.2017.
  */
 public class NewsDTO implements Serializable {
     private static final long serialVersionUID = -1904720902209766948L;
     private Integer newsId;
     private String newsName;
     private String newsText;
-    private String newsFoto;
+    private MultipartFile newsFoto;
     private String newsDate;
 
     public Integer getNewsId() {
@@ -37,11 +39,11 @@ public class NewsDTO implements Serializable {
         this.newsText = newsText;
     }
 
-    public String getNewsFoto() {
+    public MultipartFile getNewsFoto() {
         return newsFoto;
     }
 
-    public void setNewsFoto(String newsFoto) {
+    public void setNewsFoto(MultipartFile newsFoto) {
         this.newsFoto = newsFoto;
     }
 

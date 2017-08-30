@@ -2,10 +2,11 @@ package ru.mail.denis.repositories.model;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
- * Created by user on 29.06.2017.
+ * Created by Denis Monich on 29.06.2017.
  */
 public class User implements Serializable {
 
@@ -100,16 +101,17 @@ public class User implements Serializable {
     }
 
     @Override
-    public String toString() {
-        return "User{" +
-                "userId=" + userId +
-                ", userEmail='" + userEmail + '\'' +
-                ", userPassword='" + userPassword + '\'' +
-                ", userRole=" + userRole +
-                ", userStatus=" + userStatus +
-                ", userInformation=" + userInformation +
-                ", userOrders=" + userOrders +
-                ", userBooks=" + userBooks +
-                '}';
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(userId, user.userId) &&
+                Objects.equals(userEmail, user.userEmail) &&
+                Objects.equals(userPassword, user.userPassword);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId, userEmail, userPassword);
     }
 }

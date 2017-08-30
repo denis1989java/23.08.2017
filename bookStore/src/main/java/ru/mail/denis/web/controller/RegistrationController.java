@@ -10,18 +10,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.mail.denis.web.controller.validator.UserValidator;
 import ru.mail.denis.service.UserService;
-import ru.mail.denis.service.modelDTO.UserDTO;
-import ru.mail.denis.service.modelDTO.UserInformationDTO;
+import ru.mail.denis.service.model.UserDTO;
+import ru.mail.denis.service.model.UserInformationDTO;
 
 
 /**
- * Created by user on 31.05.2017.
+ * Created by Denis Monich on 31.05.2017.
  */
 
 
 @Controller
 public class RegistrationController {
-    private UserService userService;
+    private final UserService userService;
     private final UserValidator userValidator;
 
     @Autowired
@@ -30,10 +30,10 @@ public class RegistrationController {
         this.userValidator = userValidator;
     }
 
-    @RequestMapping(value = "/registration",method = RequestMethod.GET)
-    public String showRegistrationForm (Model model){
-        model.addAttribute("user",new UserDTO());
-        model.addAttribute("userInformation",new UserInformationDTO());
+    @RequestMapping(value = "/registration", method = RequestMethod.GET)
+    public String showRegistrationForm(Model model) {
+        model.addAttribute("user", new UserDTO());
+        model.addAttribute("userInformation", new UserInformationDTO());
         return "registration";
     }
 
@@ -43,10 +43,10 @@ public class RegistrationController {
             BindingResult result,
             RedirectAttributes ra
     ) {
-        userValidator.validate(userDTO,result);
+        userValidator.validate(userDTO, result);
         if (!result.hasErrors()) {
             userService.addUserDTO(userDTO);
-            ra.addFlashAttribute("successRegistration","Registration complete successfully");
+            ra.addFlashAttribute("successRegistration", "Registration complete successfully");
             return "redirect:/login";
         } else {
             return "registration";

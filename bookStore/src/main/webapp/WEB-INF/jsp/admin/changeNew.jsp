@@ -110,7 +110,6 @@
             <div class="col-md-7">
                 <form:form modelAttribute="news" method="post" action="/admin/saveNew">
                     <div class="form-inline">
-                        <form:input path="newsFoto" type="hidden"/>
                         <form:input type="hidden" path="newsId" />
                         <form:input type="text" path="newsName" />
                         <label for="newsName">New name</label>

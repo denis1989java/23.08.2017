@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
- * Created by user on 08.06.2017.
+ * Created by Denis Monich on 08.06.2017.
  */
 
 
@@ -27,7 +27,6 @@ public class ExceptionController {
     @ExceptionHandler(value = Exception.class)
     public ModelAndView handleError(HttpServletRequest req, Exception e){
         logger.error("Reques"+req.getRequestURL()+" raised "+e);
-
         ModelAndView modelAndView=new ModelAndView("error");
         modelAndView.addObject("exception",e);
         modelAndView.addObject("url",req.getRequestURL());

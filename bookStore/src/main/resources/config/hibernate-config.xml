@@ -24,16 +24,20 @@
                 <prop key="hibernate.hbm2ddl.import_files">initial_data.sql</prop>
             </props>
         </property>
+
         <property name="mappingResources">
-            <value>User.hbm.xml,
-                UserInformation.hbm.xml,
-                Basket.hbm.xml,
-                Book.hbm.xml,
-                News.hbm.xml,
-                OrdersBooks.hbm.xml,
-                OrdersBooksTimes.hbm.xml,
-                Order.hbm.xml,Message.hbm.xml
-            </value>
+            <list>
+                <value>model/User.hbm.xml</value>
+                <value>model/UserInformation.hbm.xml</value>
+                <value>model/Basket.hbm.xml</value>
+                <value>model/Book.hbm.xml</value>
+                <value>model/News.hbm.xml</value>
+                <value>model/OrdersBooks.hbm.xml</value>
+                <value>model/OrdersBooksTimes.hbm.xml</value>
+                <value>model/Order.hbm.xml</value>
+                <value>model/Message.hbm.xml</value>
+                <value>model/NewsFoto.hbm.xml</value>
+            </list>
         </property>
     </bean>
 

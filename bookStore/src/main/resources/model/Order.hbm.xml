@@ -22,7 +22,7 @@
                 <param name="useNamed">true</param>
             </type>
         </property>
-        <property name="orderPrice" type="java.math.BigDecimal">
+        <property name="orderPrice" type="string">
             <column name="F_ORDER_PRICE"/>
         </property>
         <property name="orderDate" type="string">

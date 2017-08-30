@@ -1,19 +1,19 @@
 package ru.mail.denis.service;
 
-import ru.mail.denis.service.modelDTO.UserDTO;
-import ru.mail.denis.service.modelDTO.ViewDTO;
+import ru.mail.denis.service.model.UserDTO;
+import ru.mail.denis.service.model.ViewDTO;
 
 /**
- * Created by user on 05.07.2017.
+ * Created by Denis Monich on 05.07.2017.
  */
 public interface BasketService {
 
 
-    ViewDTO viewPage(Integer userId);
+    ViewDTO viewPage();
 
     void deleteBookFromBasket(String[] deletings);
 
-    void changeBookQuantityInBasket(Integer newQuantity, Integer basketId);
+    void changeBookQuantityInBasket(String newQuantity, Integer basketId);
 
-    void addToBasket(Integer bookId, UserDTO userDTO, Integer bookQuantity);
+    void addToBasket(Integer bookId, String bookQuantity);
 }

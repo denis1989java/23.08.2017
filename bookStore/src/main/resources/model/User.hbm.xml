@@ -29,7 +29,7 @@
             </type>
         </property>
         <one-to-one name="userInformation" class="ru.mail.denis.repositories.model.UserInformation"
-                    cascade="save-update"/>
+                    cascade="all"/>
         <set name="userOrders" table="T_ORDER" cascade="all" inverse="true">
             <key>
                 <column name="F_USER_ID"></column>

@@ -1,27 +1,13 @@
 package ru.mail.denis.service.util;
 
 import ru.mail.denis.repositories.model.UserInformation;
-import ru.mail.denis.service.modelDTO.UserDTO;
-import ru.mail.denis.service.modelDTO.UserInformationDTO;
+import ru.mail.denis.service.model.UserDTO;
+import ru.mail.denis.service.model.UserInformationDTO;
 
 /**
- * Created by user on 24.08.2017.
+ * Created by Denis Monich on 24.08.2017.
  */
 public class UserInformationConverter {
-
-    public UserInformationConverter() {
-    }
-
-    public static UserInformation converter (UserInformationDTO userInformationDTO){
-        UserInformation userInformation = new UserInformation();
-        userInformation.setUserAddress(userInformationDTO.getUserAddress());
-        userInformation.setUserAdditionalInfo(userInformationDTO.getUserAdditionalInfo());
-        userInformation.setUserSurname(userInformationDTO.getUserSurname());
-        userInformation.setUserPhoneNumber(userInformationDTO.getUserPhoneNumber());
-        userInformation.setUserSecondName(userInformationDTO.getUserSecondName());
-        userInformation.setUserName(userInformationDTO.getUserName());
-        return userInformation;
-    }
 
     public static UserInformationDTO converter (UserInformation userInformation){
         UserInformationDTO userInformationDTO = new UserInformationDTO();
@@ -34,24 +20,6 @@ public class UserInformationConverter {
         return userInformationDTO;
     }
 
-    public static UserInformation converter (UserDTO userDTO){
-        UserInformation userInformation = new UserInformation();
-        userInformation.setUserAddress(userDTO.getUserAddress());
-        userInformation.setUserAdditionalInfo(userDTO.getUserAdditionalInfo());
-        userInformation.setUserSurname(userDTO.getUserSurname());
-        userInformation.setUserPhoneNumber(userDTO.getUserPhoneNumber());
-        userInformation.setUserSecondName(userDTO.getUserSecondName());
-        userInformation.setUserName(userDTO.getUserName());
-        return userInformation;
-    }
-    public static UserInformation setUserInformation(UserInformation userInformation, UserInformationDTO userInformationDTO){
-        userInformation.setUserAddress(userInformationDTO.getUserAddress());
-        userInformation.setUserAdditionalInfo(userInformationDTO.getUserAdditionalInfo());
-        userInformation.setUserSurname(userInformationDTO.getUserSurname());
-        userInformation.setUserPhoneNumber(userInformationDTO.getUserPhoneNumber());
-        userInformation.setUserSecondName(userInformationDTO.getUserSecondName());
-        userInformation.setUserName(userInformationDTO.getUserName());
-        return userInformation;
-    }
+
 
 }

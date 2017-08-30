@@ -105,22 +105,22 @@
     <div class="header-content">
         <div class="main-login main-center">
             <div class="col-md-5">
-                <form method="post"  enctype="multipart/form-data" action="/admin/saveNews">
+                <form:form modelAttribute="news" method="post"  enctype="multipart/form-data" action="/admin/saveNews">
                     <div class="form-group">
                         <div class="form-group">
-                            <input type="text"  name="newName" class="form-control"/>
+                            <form:input path="newsName" type="text"   name="newName" class="form-control"/>
                         </div>
                         <div class="form-group">
-                            <input type="text"  class="form-control" name="newText"/>
+                            <form:input path="newsText" type="text"  class="form-control" name="newText"/>
                         </div>
                         <div class="form-group">
-                            <input type="file"name="file"  class="btn btn-primary btn-block"/>
+                            <form:input path="newsFoto" type="file" name="file"  class="btn btn-primary btn-block"/>
                         </div>
                         <div class="form-group">
                             <button type="submit" class="btn btn-primary btn-block">Save</button>
                         </div>
                     </div>
-                </form>
+                </form:form>
             </div>
         </div>
     </div>

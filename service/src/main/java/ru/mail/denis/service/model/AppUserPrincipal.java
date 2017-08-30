@@ -1,4 +1,4 @@
-package ru.mail.denis.service.modelDTO;
+package ru.mail.denis.service.model;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 /**
- * Created by user on 15.08.2017.
+ * Created by Denis Monich on 15.08.2017.
  */
 public class AppUserPrincipal implements UserDetails {
 

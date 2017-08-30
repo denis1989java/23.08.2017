@@ -1,6 +1,7 @@
 package ru.mail.denis.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,21 +11,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import ru.mail.denis.repositories.model.Delivery;
 import ru.mail.denis.service.CatalogueService;
-import ru.mail.denis.service.modelDTO.*;
+import ru.mail.denis.service.model.*;
 import ru.mail.denis.service.Orderservice;
 
-import java.math.BigDecimal;
 import java.security.Principal;
 
 /**
- * Created by user on 24.08.2017.
+ * Created by Denis Monich on 24.08.2017.
  */
 
 @Controller
 public class OrderController {
 
-    private Orderservice orderservice;
-    private CatalogueService catalogueService;
+    private final Orderservice orderservice;
+    private final CatalogueService catalogueService;
 
     @Autowired
     public OrderController(Orderservice orderservice, CatalogueService catalogueService) {
@@ -35,7 +35,7 @@ public class OrderController {
     @RequestMapping(value = "/user/orders", method = RequestMethod.GET)
     public ModelAndView showOrders(Principal principal, @RequestParam(value = "orderId", required = false) String orderId) {
         ModelAndView modelAndView = new ModelAndView("user/orders");
-        ViewDTO viewDTO=orderservice.viewPageOrders(orderId,principal.getName());
+        ViewDTO viewDTO = orderservice.viewPageOrders(orderId, principal.getName());
         modelAndView.addObject(viewDTO);
         return modelAndView;
     }
@@ -43,7 +43,7 @@ public class OrderController {
     @RequestMapping(value = {"/admin/orders/{page}", "/superAdmin/orders/{page}"}, method = RequestMethod.GET)
     public ModelAndView showAllOrders(@PathVariable int page, @RequestParam(value = "orderId", required = false) String orderId) {
         ModelAndView modelAndView = new ModelAndView("allOrders");
-        ViewDTO viewDTO=orderservice.viewPageAllOrders(orderId,page);
+        ViewDTO viewDTO = orderservice.viewPageAllOrders(orderId, page);
         modelAndView.addObject(viewDTO);
         return modelAndView;
     }
@@ -51,23 +51,24 @@ public class OrderController {
 
     @RequestMapping(value = "/admin/changeDeliveryStatus", method = RequestMethod.POST)
     public String changeDeliveriStatusAdmin(@RequestParam("page") String page,
-                                       @RequestParam(value = "orderId", required = false) String orderId,
-                                       @RequestParam(value = "deliveryStatus", required = false) String deliveryStatus) {
-        orderservice.updateOrderDeliveryStatus(deliveryStatus,Integer.parseInt(orderId));
-        return "redirect:/admin/orders/"+page;
+                                            @RequestParam(value = "orderId", required = false) String orderId,
+                                            @RequestParam(value = "deliveryStatus", required = false) String deliveryStatus) {
+        orderservice.updateOrderDeliveryStatus(deliveryStatus, Integer.parseInt(orderId));
+        return "redirect:/admin/orders/" + page;
     }
+
     @RequestMapping(value = "/superAdmin/changeDeliveryStatus", method = RequestMethod.POST)
     public String changeDeliveriStatusSuperAdmin(@RequestParam("page") String page,
-                                       @RequestParam(value = "orderId", required = false) String orderId,
-                                       @RequestParam(value = "deliveryStatus", required = false) String deliveryStatus) {
-        orderservice.updateOrderDeliveryStatus(deliveryStatus,Integer.parseInt(orderId));
-        return "redirect:/superAdmin/orders/"+page;
+                                                 @RequestParam(value = "orderId", required = false) String orderId,
+                                                 @RequestParam(value = "deliveryStatus", required = false) String deliveryStatus) {
+        orderservice.updateOrderDeliveryStatus(deliveryStatus, Integer.parseInt(orderId));
+        return "redirect:/superAdmin/orders/" + page;
     }
 
 
     @RequestMapping(value = "/user/orders", method = RequestMethod.POST)
     public String addOrder(@RequestParam("fullPrice") String fullPrice, Principal principal) {
-        orderservice.addOrder(principal.getName(), BigDecimal.valueOf(Double.parseDouble(fullPrice)));
+        orderservice.addOrder(principal.getName(), String.valueOf(Double.parseDouble(fullPrice)));
         return "redirect:/user/orders";
     }
 
@@ -80,17 +81,24 @@ public class OrderController {
     @RequestMapping(value = "/user/order/change", method = RequestMethod.GET)
     public String showChangeOrder(@RequestParam("orderId") String orderId, Model model) {
         OrderDTO orderDTO = orderservice.getOrderById(Integer.valueOf(orderId));
-        if(orderDTO.getOrderDelivery()!=Delivery.NEW){
+        if (orderDTO.getOrderDelivery() != Delivery.NEW) {
             return "redirect:/user/orders";
         }
-        ViewDTO viewDTO=orderservice.viewPageChangeOrder(orderDTO,orderId);
+        AppUserPrincipal principal = (AppUserPrincipal) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+        Integer userId=principal.getUserId();
+        if (orderDTO.getUserId() != userId) {
+            return "redirect:/user/orders";
+        }
+        ViewDTO viewDTO = orderservice.viewPageChangeOrder(orderDTO, orderId);
         model.addAttribute(viewDTO);
         return "user/changeOrder";
     }
 
     @RequestMapping(value = "/user/order/addToOrder/{page}", method = RequestMethod.GET)
     public ModelAndView showAddToOrder(@RequestParam("orderId") String orderId, @PathVariable int page) {
-        ViewDTO viewDTO = catalogueService.viewPage(page,orderId);
+        ViewDTO viewDTO = catalogueService.viewPage(page, orderId);
         ModelAndView modelAndView = new ModelAndView("user/addToOrder");
         modelAndView.addObject(viewDTO);
         return modelAndView;
@@ -100,7 +108,7 @@ public class OrderController {
     public String addToOrder(@RequestParam("orderId") String orderId,
                              @RequestParam("bookId") String bookId,
                              @RequestParam("bookQuantity") String bookQuantity) {
-        orderservice.addOrderBookTimes(Integer.parseInt(bookId), Integer.parseInt(orderId), Integer.parseInt(bookQuantity));
+        orderservice.addOrderBookTimes(Integer.parseInt(bookId), Integer.parseInt(orderId), bookQuantity);
         return "redirect:/user/order/change?orderId=" + orderId;
     }
 
@@ -111,7 +119,7 @@ public class OrderController {
         if (bookQuantity == "") {
             return "redirect:/user/order/change?orderId=" + orderId;
         } else {
-            orderservice.changeOrdersBooksTimesQuantity(Integer.parseInt(bookQuantity), Integer.parseInt(ordersBooksTimesId));
+            orderservice.changeOrdersBooksTimesQuantity(bookQuantity, Integer.parseInt(ordersBooksTimesId));
             return "redirect:/user/order/change?orderId=" + orderId;
         }
     }
@@ -120,7 +128,7 @@ public class OrderController {
     public String deleteOrderBookTimes(@RequestParam(value = "deleting", required = false) String[] deletings,
                                        @RequestParam("orderId") String orderId) {
         if (deletings != null) {
-                orderservice.deleteFromOrdersBooksTimesById(deletings);
+            orderservice.deleteFromOrdersBooksTimesById(deletings);
         }
         return "redirect:/user/order/change?orderId=" + orderId;
     }
@@ -134,7 +142,7 @@ public class OrderController {
     @RequestMapping(value = "/user/order/save", method = RequestMethod.POST)
     public String saveOrder(@RequestParam("orderId") String orderId,
                             @RequestParam("fullPrice") String fullPrice) {
-        orderservice.updateOrderAndOrdersBooks(Integer.parseInt(orderId),BigDecimal.valueOf(Double.parseDouble(fullPrice))) ;
+        orderservice.updateOrderAndOrdersBooks(Integer.parseInt(orderId), String.valueOf(Double.parseDouble(fullPrice)));
         return "redirect:/user/orders";
     }
 }

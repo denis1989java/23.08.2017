@@ -14,9 +14,8 @@
         <property name="newsText" type="string">
             <column name="F_NEWS_TEXT" length="255"/>
         </property>
-        <property name="newsFoto" type="string">
-            <column name="F_NEWS_FOTO" />
-        </property>
+        <one-to-one name="foto" class="ru.mail.denis.repositories.model.NewFoto"
+                    cascade="all"/>
         <property name="newsDate" type="string">
             <column name="F_NEWS_DATE"/>
         </property>

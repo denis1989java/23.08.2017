@@ -1,21 +1,29 @@
-package ru.mail.denis.service.modelDTO;
+package ru.mail.denis.service.model;
 
 import ru.mail.denis.repositories.model.Delivery;
 import ru.mail.denis.repositories.model.Receive;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 /**
- * Created by user on 28.07.2017.
+ * Created by Denis Monich on 28.07.2017.
  */
 public class OrderDTO implements Serializable {
     private static final long serialVersionUID = -8679855819657017207L;
     private Integer orderId;
-    private BigDecimal orderPrice;
+    private String orderPrice;
     private Delivery orderDelivery;
     private Receive orderReceive;
     private String orderDate;
+    private Integer userId;
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
 
     public Integer getOrderId() {
         return orderId;
@@ -25,11 +33,11 @@ public class OrderDTO implements Serializable {
         this.orderId = orderId;
     }
 
-    public BigDecimal getOrderPrice() {
+    public String getOrderPrice() {
         return orderPrice;
     }
 
-    public void setOrderPrice(BigDecimal orderPrice) {
+    public void setOrderPrice(String orderPrice) {
         this.orderPrice = orderPrice;
     }
 

@@ -3,14 +3,17 @@ package ru.mail.denis.service.impl;
 import org.apache.log4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mail.denis.repositories.*;
 import ru.mail.denis.repositories.model.*;
-import ru.mail.denis.service.modelDTO.UserDTO;
-import ru.mail.denis.service.modelDTO.UserInformationDTO;
-import ru.mail.denis.service.modelDTO.ViewDTO;
+import ru.mail.denis.service.model.AppUserPrincipal;
+import ru.mail.denis.service.model.UserDTO;
+import ru.mail.denis.service.model.UserInformationDTO;
+import ru.mail.denis.service.model.ViewDTO;
 import ru.mail.denis.service.UserService;
 import ru.mail.denis.service.util.UserConverter;
 import ru.mail.denis.service.util.UserInformationConverter;
@@ -19,6 +22,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+
+/**
+ * Created by Denis Monich on 07.07.2017.
+ */
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -58,16 +66,16 @@ public class UserServiceImpl implements UserService {
         if (page != 0) {
             page = page * total;
         }
-        List<UserDTO> userDTOS = UserConverter.converter(getUsersByParts(page, total));
-        Integer usersDTOQuantity = findAll().size();
-        List<Integer> pagination = new ArrayList();
-        Integer pageQuantity = 0;
+        List<UserDTO> userDTOS = converter(getUsersByParts(page, total));
+        Long usersDTOQuantity = userQuantity();
+        List<Long> pagination = new ArrayList();
+       Long pageQuantity = Long.valueOf(0);
         if (usersDTOQuantity % total == 0) {
             pageQuantity = usersDTOQuantity / total;
         } else {
             pageQuantity = usersDTOQuantity / total + 1;
         }
-        for (Integer i = 0; i < pageQuantity; i++) {
+        for (Long i = Long.valueOf(0); i < pageQuantity; i++) {
             pagination.add(i);
         }
         Map<String, Object> map = new HashMap<>();
@@ -94,8 +102,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserInformationDTO getUserinformationDTOByUserId(Integer userId) {
-        UserInformation userInformation = getUserInformationByUserId(userId);
+    public UserInformationDTO getUserinformationDTOByUserId() {
+        UserDTO userDTO=getUser();
+        UserInformation userInformation = getUserInformationByUserId(userDTO.getUserId());
         if (userInformation != null) {
             return UserInformationConverter.converter(userInformation);
         } else {
@@ -110,25 +119,25 @@ public class UserServiceImpl implements UserService {
         userDTO.setUserStatus(Status.ACTIVE);
         User user = UserConverter.converter(userDTO);
         user.setUserPassword(bCryptPasswordEncoder.encode(userDTO.getUserPassword()));
-        UserInformation userInformation = UserInformationConverter.converter(userDTO);
+        UserInformation userInformation = converter(userDTO);
         user.setUserInformation(userInformation);
-        userInformation.setUser(user);
         saveUser(user);
     }
 
     @Override
     @Transactional
-    public void updateUserDTO(UserDTO userDTO) {
-        User user = UserConverter.converter(userDTO);
-        user.setUserPassword(bCryptPasswordEncoder.encode(userDTO.getUserPassword()));
-        updateUser(user);
+    public void updateUserDTO(String newPassword) {
+       UserDTO userDTO=getUser();
+        userDTO.setUserPassword(bCryptPasswordEncoder.encode(newPassword));
+        mergeUser(UserConverter.converter(userDTO));
     }
 
     @Override
     @Transactional
-    public void updateUserInformationDTO(UserInformationDTO userInformationDTO, Integer userId) {
-        UserInformation userInformation = getUserInformationByUserId(userId);
-        userInformation = UserInformationConverter.setUserInformation(userInformation, userInformationDTO);
+    public void updateUserInformationDTO(UserInformationDTO userInformationDTO) {
+        UserDTO userDTO=getUser();
+        UserInformation userInformation = getUserInformationByUserId(userDTO.getUserId());
+        userInformation = setUserInformation(userInformation, userInformationDTO);
         updateUserInformation(userInformation);
     }
 
@@ -185,21 +194,27 @@ public class UserServiceImpl implements UserService {
     }
 
 
+    @Override
+    @Transactional
+    public boolean checkPassword(String userPassword){
+        UserDTO userDTO=getUser();
+        if (BCrypt.checkpw(userPassword, userDTO.getUserPassword())) {
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+
     private UserInformation getUserInformationByUserId(Integer userId) {
-        logger.debug("Getting userInformation by User id");
+        logger.debug("Getting userInformation by User id"+userId);
         UserInformation userInformation = userInformationDAO.findUserInformationByUserId(userId);
         return userInformation;
 
     }
 
-    private List<User> findAll() {
-        logger.debug("Finding all users");
-        List<User> users = userDAO.findAll();
-        return users;
-    }
-
     private void delete(User user) {
-        logger.debug("Deleting user");
+        logger.debug("Deleting user with Id" + user.getUserId());
         userDAO.delete(user);
     }
 
@@ -216,7 +231,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private void updateUserInformation(UserInformation userInformation) {
-        logger.debug("Updating UserInformation");
+        logger.debug("Updating UserInformation with user Id "+ userInformation.getUser().getUserId());
         userInformationDAO.update(userInformation);
     }
 
@@ -225,15 +240,57 @@ public class UserServiceImpl implements UserService {
         userDAO.update(user);
     }
 
+    private void mergeUser(User user){
+        userDAO.merge(user);
+    }
+
     private User findById(Integer id) {
-        logger.debug("Finding User by id");
+        logger.debug("Finding User by id"+ id);
         User user = userDAO.findById(id);
         return user;
     }
 
     private User findByEmail(String email) {
-        logger.debug("Finding User by email");
+        logger.debug("Finding User by email"+ email);
         User user = userDAO.findByEmail(email);
         return user;
+    }
+    private Long userQuantity () {
+        logger.debug("Finding users quantity");
+        Long quantity = userDAO.getUsersQuantity();
+        return quantity;
+    }
+    private UserDTO getUser() {
+        AppUserPrincipal principal = (AppUserPrincipal) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+        return UserConverter.converter(userDAO.findByEmail(principal.getUsername())) ;
+    }
+    private List<UserDTO> converter(List <User> users){
+        List<UserDTO> usersDTO = new ArrayList<>();
+        for (User user : users) {
+            UserDTO userDTO = UserConverter.converter(user);
+            usersDTO.add(userDTO);
+        }
+        return usersDTO;
+    }
+    private UserInformation converter (UserDTO userDTO){
+        UserInformation userInformation = new UserInformation();
+        userInformation.setUserAddress(userDTO.getUserAddress());
+        userInformation.setUserAdditionalInfo(userDTO.getUserAdditionalInfo());
+        userInformation.setUserSurname(userDTO.getUserSurname());
+        userInformation.setUserPhoneNumber(userDTO.getUserPhoneNumber());
+        userInformation.setUserSecondName(userDTO.getUserSecondName());
+        userInformation.setUserName(userDTO.getUserName());
+        return userInformation;
+    }
+    private UserInformation setUserInformation(UserInformation userInformation, UserInformationDTO userInformationDTO){
+        userInformation.setUserAddress(userInformationDTO.getUserAddress());
+        userInformation.setUserAdditionalInfo(userInformationDTO.getUserAdditionalInfo());
+        userInformation.setUserSurname(userInformationDTO.getUserSurname());
+        userInformation.setUserPhoneNumber(userInformationDTO.getUserPhoneNumber());
+        userInformation.setUserSecondName(userInformationDTO.getUserSecondName());
+        userInformation.setUserName(userInformationDTO.getUserName());
+        return userInformation;
     }
 }

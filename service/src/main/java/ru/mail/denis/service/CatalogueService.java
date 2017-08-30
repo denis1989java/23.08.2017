@@ -1,10 +1,10 @@
 package ru.mail.denis.service;
 
-import ru.mail.denis.service.modelDTO.BookDTO;
-import ru.mail.denis.service.modelDTO.ViewDTO;
+import ru.mail.denis.service.model.BookDTO;
+import ru.mail.denis.service.model.ViewDTO;
 
 /**
- * Created by user on 05.07.2017.
+ * Created by Denis Monich on 05.07.2017.
  */
 public interface CatalogueService {
 
