@@ -44,6 +44,7 @@ public class MessageServiceImpl implements MessageService {
     @Transactional
     public ViewDTO viewPage(Integer page, String userEmail, String messageID){
         int total=7;
+        int pageNumber=page;
         if (page != 0) {
             page = page * total;
         }
@@ -74,6 +75,7 @@ public class MessageServiceImpl implements MessageService {
             }
             map.put("messageID", messageID);
         }
+        map.put("page",pageNumber);
         map.put("messages",messageDTOS);
         map.put("pagination",pagination);
         ViewDTO viewDTO=new ViewDTO();

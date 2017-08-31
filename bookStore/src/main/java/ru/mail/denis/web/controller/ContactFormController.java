@@ -48,7 +48,8 @@ public class ContactFormController {
     }
 
     @RequestMapping(value = {"admin/messages","superAdmin/messages"}, method = RequestMethod.GET)
-    public ModelAndView showMessages(@RequestParam(value = "page", required = false) String page, @RequestParam(value = "userEmail", required = false) String userEmail,
+    public ModelAndView showMessages(@RequestParam(value = "page", required = false) String page,
+                                     @RequestParam(value = "userEmail", required = false) String userEmail,
                                      @RequestParam(value = "messageId", required = false) String messageId) {
         if (page==""){
            page="0";

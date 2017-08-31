@@ -37,7 +37,7 @@ public class BasketController {
     @RequestMapping(value = "/addToBasket", method = RequestMethod.POST)
     public String addToBasket(@RequestParam("bookId") String bookId, @RequestParam("bookQuantity") String bookQuantity) {
         basketService.addToBasket(Integer.parseInt(bookId), bookQuantity);
-        return "redirect:/user/catalogue/0";
+        return "redirect:/user/catalogue?page=0";
     }
 
     @RequestMapping(value = "/basket/changeQuantity", method = RequestMethod.POST)

@@ -100,17 +100,17 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/news/0">news</a>
+                    <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/news?page=0">news</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link"
-                       href="${pageContext.request.contextPath}/superAdmin/catalogue/0">catalogue</a>
+                       href="${pageContext.request.contextPath}/superAdmin/catalogue?page=0">catalogue</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/profile">my profile</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/orders/0">Orders</a>
+                    <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/orders?page=0">Orders</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="${pageContext.request.contextPath}/logout">logout</a>
@@ -133,7 +133,8 @@
                             <th style="color: #FFFFFF">Status</th>
                             <th style="color: #FFFFFF">Change role</th>
                             <th style="color: #FFFFFF">Change status</th>
-                            <th><input name="delete" type="submit"
+                            <th><input type="hidden" name="page" value="${viewDTO.viewMap['page']}">
+                                <input name="delete" type="submit"
                                        value="delete" style="text-align:left"></th>
                         </tr>
                         <c:forEach var="userDTO" items="${viewDTO.viewMap['users']}">
@@ -151,6 +152,7 @@
                                             <option value="ADMIN">ADMIN</option>
                                             <option value="SUPER_ADMIN">SUPER_ADMIN</option>
                                         </select>
+                                        <input type="hidden" name="page" value="${viewDTO.viewMap['page']}">
                                         <input type="hidden" name="userId" value="${userDTO.userId}"/>
                                         <input name="changeRole" value="change" type="submit"
                                                style="text-align:left"/>
@@ -161,13 +163,15 @@
                                         <select name="userStatus">
                                             <option value="ACTIVE">ACTIVE</option>
                                             <option value="BLOCKED">BLOCKED</option>
+                                            <input type="hidden" name="page" value="${viewDTO.viewMap['page']}">
                                             <input type="hidden" name="userId" value="${userDTO.userId}"/>
                                             <input name="changeStatus" value="change" type="submit"
                                                    style="text-align:left"/>
                                         </select>
                                     </form>
                                 </td>
-                                <td><input style="text-align:left; width: 3vw;height: 3vh;border-radius: 10px"
+                                <td>
+                                    <input style="text-align:left; width: 3vw;height: 3vh;border-radius: 10px"
                                            maxlength="2" name="deleting" value="${userDTO.userId}"
                                            type="checkbox"/>
                                 </td>
@@ -181,7 +185,7 @@
             <div class="col-md-5">
                 <div class="pagination">
                     <c:forEach var="page" items="${ viewDTO.viewMap['pagination']}">
-                        <li><a href="${page}">${page+1}</a></li>
+                        <li><a href="?page=${page}">${page+1}</a></li>
                     </c:forEach>
                 </div>
             </div>

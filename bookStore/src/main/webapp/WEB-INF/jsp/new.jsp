@@ -71,14 +71,14 @@
                 <security:authorize access="hasAuthority('USER')">
 
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/user/news/0">news</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/user/news?page=0">news</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="${pageContext.request.contextPath}/user/cabinet">cabinet</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link"
-                           href="${pageContext.request.contextPath}/user/catalogue/0">catalogue</a>
+                           href="${pageContext.request.contextPath}/user/catalogue?page=0">catalogue</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="${pageContext.request.contextPath}/user/profile">my profile</a>
@@ -95,20 +95,20 @@
                 </security:authorize>
                 <security:authorize access="hasAuthority('ADMIN')">
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/admin/news/0">news</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/admin/news?page=0">news</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="${pageContext.request.contextPath}/admin/cabinet">Cabinet</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link"
-                           href="${pageContext.request.contextPath}/admin/catalogue/0">catalogue</a>
+                           href="${pageContext.request.contextPath}/admin/catalogue?page=0">catalogue</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="${pageContext.request.contextPath}/admin/profile">my profile</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/admin/orders/0">Orders</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/admin/orders?page=0">Orders</a>
                     </li>
 
                     <li class="nav-item">
@@ -117,24 +117,24 @@
                 </security:authorize>
                 <security:authorize access="hasAuthority('SUPER_ADMIN')">
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/news/0">news</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/news?page=0">news</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/users/0">users</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/users?page=0">users</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/cabinet">Cabinet</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link"
-                           href="${pageContext.request.contextPath}/superAdmin/catalogue/0">catalogue</a>
+                           href="${pageContext.request.contextPath}/superAdmin/catalogue?page=0">catalogue</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/profile">my profile</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link"
-                           href="${pageContext.request.contextPath}/superAdmin/orders/0">Orders</a>
+                           href="${pageContext.request.contextPath}/superAdmin/orders?page=0">Orders</a>
                     </li>
 
                     <li class="nav-item">

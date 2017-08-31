@@ -82,17 +82,17 @@
                             <a class="nav-link" href="${pageContext.request.contextPath}/admin/cabinet">Cabinet</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="${pageContext.request.contextPath}/admin/news/0">news</a>
+                            <a class="nav-link" href="${pageContext.request.contextPath}/admin/news?page=0">news</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link"
-                               href="${pageContext.request.contextPath}/admin/catalogue/0">catalogue</a>
+                               href="${pageContext.request.contextPath}/admin/catalogue?page=0">catalogue</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="${pageContext.request.contextPath}/admin/profile">my profile</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="${pageContext.request.contextPath}/admin/orders/0">Orders</a>
+                            <a class="nav-link" href="${pageContext.request.contextPath}/admin/orders?page=0">Orders</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="${pageContext.request.contextPath}/logout">logout</a>

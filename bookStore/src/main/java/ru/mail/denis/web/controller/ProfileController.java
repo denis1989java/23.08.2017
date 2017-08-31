@@ -56,7 +56,7 @@ public class ProfileController {
     }
 
     @RequestMapping(value = "*/changePassword", method = RequestMethod.POST)
-    public String updatepassword(Principal principal, @ModelAttribute("newPassword") String newPassword,
+    public String updatepassword(@ModelAttribute("newPassword") String newPassword,
                                  @ModelAttribute("userPassword") String userPassword,
                                  @ModelAttribute("repeatPassword") String repeatPassword,
                                  RedirectAttributes ra) {

@@ -63,10 +63,15 @@ public class UserServiceImpl implements UserService {
    @Transactional
     public ViewDTO viewPageAllUsers(Integer page) {
         int total = 7;
+        int pageNumber=page;
         if (page != 0) {
             page = page * total;
         }
         List<UserDTO> userDTOS = converter(getUsersByParts(page, total));
+       if (userDTOS.isEmpty()){
+           page=0;
+           userDTOS=converter(getUsersByParts(page, total));
+       }
         Long usersDTOQuantity = userQuantity();
         List<Long> pagination = new ArrayList();
        Long pageQuantity = Long.valueOf(0);
@@ -79,6 +84,7 @@ public class UserServiceImpl implements UserService {
             pagination.add(i);
         }
         Map<String, Object> map = new HashMap<>();
+        map.put("page",pageNumber);
         map.put("users", userDTOS);
         map.put("pagination", pagination);
         ViewDTO viewDTO=new ViewDTO();

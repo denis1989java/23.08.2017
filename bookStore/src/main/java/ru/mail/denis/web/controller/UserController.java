@@ -24,9 +24,12 @@ public class UserController {
         this.userService = userService;
     }
 
-    @RequestMapping(value = "/users/{page}", method = RequestMethod.GET)
-    public ModelAndView showUsers(@PathVariable int page) {
-        ViewDTO viewDTO = userService.viewPageAllUsers(page);
+    @RequestMapping(value = "/users", method = RequestMethod.GET)
+    public ModelAndView showUsers(@RequestParam(value = "page", required = false) String page) {
+        if (page=="" || page==null){
+            page="0";
+        }
+        ViewDTO viewDTO = userService.viewPageAllUsers(Integer.valueOf(page));
         ModelAndView modelAndView = new ModelAndView("superAdmin/users");
         modelAndView.addObject(viewDTO);
         return modelAndView;
@@ -35,24 +38,33 @@ public class UserController {
     }
 
     @RequestMapping(value = "/deleteUser", method = RequestMethod.GET)
-    public String deleteUser(@RequestParam(value = "deleting", required = false) String[] deletings) {
+    public String deleteUser(@RequestParam(value = "page", required = false) String page,@RequestParam(value = "deleting", required = false) String[] deletings) {
+        if (page=="" ||page==null){
+            page="0";
+        }
         if (deletings != null) {
             userService.deleteUserDTO(deletings);
         }
-        return "redirect:/superAdmin/users/0";
+        return "redirect:/superAdmin/users?page="+page;
     }
 
 
     @RequestMapping(value = "/changeStatus", method = RequestMethod.GET)
-    public String changeUserStatus(@RequestParam("userStatus") String userStatus, @RequestParam("userId") String userId) {
+    public String changeUserStatus(@RequestParam(value = "page", required = false) String page,@RequestParam("userStatus") String userStatus, @RequestParam("userId") String userId) {
+        if (page=="" || page==null){
+            page="0";
+        }
         userService.changeUserDTOStatus(userStatus, Integer.valueOf(userId));
-        return "redirect:/superAdmin/users/0";
+        return "redirect:/superAdmin/users?page="+page;
     }
 
 
     @RequestMapping(value = "/changeRole", method = RequestMethod.GET)
-    public String changeUserRole(@RequestParam("userRole") String userRole, @RequestParam("userId") String userId) {
+    public String changeUserRole(@RequestParam(value = "page", required = false) String page,@RequestParam("userRole") String userRole, @RequestParam("userId") String userId) {
+        if (page=="" ||page==null){
+            page="0";
+        }
         userService.changeUserDTORole(userRole, Integer.valueOf(userId));
-        return "redirect:/superAdmin/users/0";
+        return "redirect:/superAdmin/users?page="+page;
     }
 }

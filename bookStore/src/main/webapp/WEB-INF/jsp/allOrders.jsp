@@ -94,11 +94,11 @@
                         <a class="nav-link" href="${pageContext.request.contextPath}/admin/cabinet">Cabinet</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/admin/news/0">news</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/admin/news?page=0">news</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link"
-                           href="${pageContext.request.contextPath}/admin/catalogue/0">catalogue</a>
+                           href="${pageContext.request.contextPath}/admin/catalogue?page=0">catalogue</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="${pageContext.request.contextPath}/admin/profile">my profile</a>
@@ -112,13 +112,13 @@
                         <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/cabinet">Cabinet</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/users/0">users</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/users?page=0">users</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/news/0">news</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/news?page=0">news</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/catalogue/0">catalogue</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/catalogue?page=0">catalogue</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/profile">my profile</a>
@@ -169,7 +169,7 @@
                                                     <option value="IN_PROGRESS">IN_PROGRESS</option>
                                                     <option value="DELIVERED">DELIVERED</option>
                                                 </select>
-                                                <input type="hidden" name="page" value="${page}">
+                                                <input type="hidden" name="page" value="${viewDTO.viewMap['page']}">
                                                 <input type="hidden" name="orderId" value="${order.orderId}">
                                                 <input name="changeStatus" value="change" type="submit"
                                                        style="text-align:left">
@@ -183,8 +183,8 @@
                                                     <option value="IN_PROGRESS">IN_PROGRESS</option>
                                                     <option value="DELIVERED">DELIVERED</option>
                                                 </select>
+                                                <input type="hidden" name="page" value="${viewDTO.viewMap['page']}">
                                                 <input type="hidden" name="orderId" value="${order.orderId}">
-                                                <input type="hidden" name="page" value="${page}">
                                                 <input name="changeStatus" value="change" type="submit"
                                                        style="text-align:left">
                                             </form>
@@ -193,14 +193,16 @@
                                     </td>
                                     <td>
                                         <security:authorize access="hasAuthority('ADMIN')">
-                                            <form action="/admin/orders/${page}" method="get" >
+                                            <form action="/admin/orders" method="get" >
                                                 <input type="hidden" name="orderId" value="${order.orderId}">
+                                                <input type="hidden" name="page" value="${viewDTO.viewMap['page']}">
                                                 <input name="showDetails" value="show details" type="submit"
                                                        style="text-align:left">
                                             </form>
                                         </security:authorize>
                                         <security:authorize access="hasAuthority('SUPER_ADMIN')">
-                                            <form action="/superAdmin/orders/${page}" method="get" >
+                                            <form action="/superAdmin/orders" method="get" >
+                                                <input type="hidden" name="page" value="${viewDTO.viewMap['page']}">
                                                 <input type="hidden" name="orderId" value="${order.orderId}">
                                                 <input name="showDetails" value="show details" type="submit"
                                                        style="text-align:left">
@@ -244,7 +246,7 @@
             <div class="col-md-5">
                 <div class="pagination">
                     <c:forEach var="page" items="${ viewDTO.viewMap['pagination']}">
-                        <li><a href="${page}">${page+1}</a></li>
+                        <li><a href="?page=${page}">${page+1}</a></li>
                     </c:forEach>
                 </div>
             </div>

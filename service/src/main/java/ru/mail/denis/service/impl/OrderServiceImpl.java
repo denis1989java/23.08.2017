@@ -61,6 +61,7 @@ public class OrderServiceImpl implements Orderservice {
     @Transactional
     public ViewDTO viewPageAllOrders(String orderId, Integer page) {
         int total = 7;
+        int pageNumber=page;
         if (page != 0) {
             page = page * total;
         }
@@ -84,6 +85,7 @@ public class OrderServiceImpl implements Orderservice {
             map.put("ordersBooksDTO", orderBooksDTO);
             map.put("orderID", orderId);
         }
+        map.put("page",pageNumber);
         map.put("orders", orders);
         map.put("pagination", pagination);
         ViewDTO viewDTO = new ViewDTO();

@@ -40,29 +40,32 @@ public class OrderController {
         return modelAndView;
     }
 
-    @RequestMapping(value = {"/admin/orders/{page}", "/superAdmin/orders/{page}"}, method = RequestMethod.GET)
-    public ModelAndView showAllOrders(@PathVariable int page, @RequestParam(value = "orderId", required = false) String orderId) {
+    @RequestMapping(value = {"/admin/orders", "/superAdmin/orders"}, method = RequestMethod.GET)
+    public ModelAndView showAllOrders(@RequestParam(value = "page", required = false) String page, @RequestParam(value = "orderId", required = false) String orderId) {
+        if (page=="" ){
+            page="0";
+        }
         ModelAndView modelAndView = new ModelAndView("allOrders");
-        ViewDTO viewDTO = orderservice.viewPageAllOrders(orderId, page);
+        ViewDTO viewDTO = orderservice.viewPageAllOrders(orderId, Integer.valueOf(page));
         modelAndView.addObject(viewDTO);
         return modelAndView;
     }
 
 
     @RequestMapping(value = "/admin/changeDeliveryStatus", method = RequestMethod.POST)
-    public String changeDeliveriStatusAdmin(@RequestParam("page") String page,
+    public String changeDeliveriStatusAdmin(@RequestParam(value = "page", required = false) String page,
                                             @RequestParam(value = "orderId", required = false) String orderId,
                                             @RequestParam(value = "deliveryStatus", required = false) String deliveryStatus) {
         orderservice.updateOrderDeliveryStatus(deliveryStatus, Integer.parseInt(orderId));
-        return "redirect:/admin/orders/" + page;
+        return "redirect:/admin/orders?page=" + page;
     }
 
     @RequestMapping(value = "/superAdmin/changeDeliveryStatus", method = RequestMethod.POST)
-    public String changeDeliveriStatusSuperAdmin(@RequestParam("page") String page,
+    public String changeDeliveriStatusSuperAdmin(@RequestParam(value = "page", required = false) String page,
                                                  @RequestParam(value = "orderId", required = false) String orderId,
                                                  @RequestParam(value = "deliveryStatus", required = false) String deliveryStatus) {
         orderservice.updateOrderDeliveryStatus(deliveryStatus, Integer.parseInt(orderId));
-        return "redirect:/superAdmin/orders/" + page;
+        return "redirect:/superAdmin/orders?page=" + page;
     }
 
 
@@ -78,8 +81,8 @@ public class OrderController {
         return "redirect:/user/orders";
     }
 
-    @RequestMapping(value = "/user/order/change", method = RequestMethod.GET)
-    public String showChangeOrder(@RequestParam("orderId") String orderId, Model model) {
+    @RequestMapping(value = "/user/order/change/{orderId}", method = RequestMethod.GET)
+    public String showChangeOrder(@PathVariable Integer orderId, Model model) {
         OrderDTO orderDTO = orderservice.getOrderById(Integer.valueOf(orderId));
         if (orderDTO.getOrderDelivery() != Delivery.NEW) {
             return "redirect:/user/orders";
@@ -91,25 +94,28 @@ public class OrderController {
         if (orderDTO.getUserId() != userId) {
             return "redirect:/user/orders";
         }
-        ViewDTO viewDTO = orderservice.viewPageChangeOrder(orderDTO, orderId);
+        ViewDTO viewDTO = orderservice.viewPageChangeOrder(orderDTO, String.valueOf(orderId));
         model.addAttribute(viewDTO);
         return "user/changeOrder";
     }
 
-    @RequestMapping(value = "/user/order/addToOrder/{page}", method = RequestMethod.GET)
-    public ModelAndView showAddToOrder(@RequestParam("orderId") String orderId, @PathVariable int page) {
-        ViewDTO viewDTO = catalogueService.viewPage(page, orderId);
+    @RequestMapping(value = "/user/order/addToOrder/{orderId}", method = RequestMethod.GET)
+    public ModelAndView showAddToOrder( @PathVariable Integer orderId, @RequestParam (value = "page", required = false) String page) {
+        if (page==""){
+            page="0";
+        }
+        ViewDTO viewDTO = catalogueService.viewPage(Integer.valueOf(page), String.valueOf(orderId));
         ModelAndView modelAndView = new ModelAndView("user/addToOrder");
         modelAndView.addObject(viewDTO);
         return modelAndView;
     }
 
-    @RequestMapping(value = "/user/order/addToOrder", method = RequestMethod.POST)
-    public String addToOrder(@RequestParam("orderId") String orderId,
-                             @RequestParam("bookId") String bookId,
+    @RequestMapping(value = "/user/order/addToOrder/{orderId}/{bookId}", method = RequestMethod.POST)
+    public String addToOrder(@PathVariable Integer orderId,
+                             @PathVariable Integer bookId,
                              @RequestParam("bookQuantity") String bookQuantity) {
-        orderservice.addOrderBookTimes(Integer.parseInt(bookId), Integer.parseInt(orderId), bookQuantity);
-        return "redirect:/user/order/change?orderId=" + orderId;
+        orderservice.addOrderBookTimes(bookId, orderId, bookQuantity);
+        return "redirect:/user/order/change/" + orderId;
     }
 
     @RequestMapping(value = "/user/order/changeBookQuantity", method = RequestMethod.POST)
@@ -117,10 +123,10 @@ public class OrderController {
                                      @RequestParam("ordersBooksTimesId") String ordersBooksTimesId,
                                      @RequestParam("bookQuantity") String bookQuantity) {
         if (bookQuantity == "") {
-            return "redirect:/user/order/change?orderId=" + orderId;
+            return "redirect:/user/order/change/" + orderId;
         } else {
             orderservice.changeOrdersBooksTimesQuantity(bookQuantity, Integer.parseInt(ordersBooksTimesId));
-            return "redirect:/user/order/change?orderId=" + orderId;
+            return "redirect:/user/order/change/" + orderId;
         }
     }
 
@@ -130,7 +136,7 @@ public class OrderController {
         if (deletings != null) {
             orderservice.deleteFromOrdersBooksTimesById(deletings);
         }
-        return "redirect:/user/order/change?orderId=" + orderId;
+        return "redirect:/user/order/change/" + orderId;
     }
 
     @RequestMapping(value = "/user/order/delete", method = RequestMethod.POST)

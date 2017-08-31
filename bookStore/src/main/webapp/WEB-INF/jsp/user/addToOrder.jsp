@@ -99,7 +99,7 @@
                     <a class="nav-link" href="${pageContext.request.contextPath}/user/cabinet">cabinet</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="${pageContext.request.contextPath}/user/news/0">news</a>
+                    <a class="nav-link" href="${pageContext.request.contextPath}/user/news?page=0">news</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="${pageContext.request.contextPath}/user/profile">my profile</a>
@@ -137,12 +137,10 @@
                             <td style="color: #FFFFFF"><c:out value="${book.bookPrice}"/></td>
                             <td style="color: #FFFFFF"><c:out value="${book.bookDescription}"/></td>
                             <td style="color: #FFFFFF">
-                                <form method="post" action="/user/order/addToOrder">
+                                <form method="post" action="/user/order/addToOrder/${ viewDTO.viewMap['orderId']}/${book.bookId}">
                                     <input size="1" name="bookQuantity" style="text-align:center;"
                                            maxlength="2"
                                            pattern="[1-9]?[0-9]" type="text" required>
-                                    <input type="hidden" name="orderId" value="${ viewDTO.viewMap['orderId']}">
-                                    <input type="hidden" name="bookId" value="${book.bookId}">
                                     <input name="addToChangeOrder" value="add to order" type="submit"
                                            style="text-align:left">
                                 </form>
@@ -159,7 +157,7 @@
                 <div class="pagination">
                     <c:forEach var="page" items="${viewDTO.viewMap['pagination']}">
                         <li>
-                            <a href="${page}?orderId=${viewDTO.viewMap['orderId']}">${page+1}</a>
+                            <a href="${viewDTO.viewMap['orderId']}?page=${page}">${page+1}</a>
                         </li>
                     </c:forEach>
                 </div>

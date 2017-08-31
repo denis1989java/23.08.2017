@@ -100,7 +100,7 @@
                         <a class="nav-link" href="${pageContext.request.contextPath}/user/cabinet">cabinet</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/user/news/0">news</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/user/news?page=0">news</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="${pageContext.request.contextPath}/user/profile">my profile</a>
@@ -120,11 +120,11 @@
                         <a class="nav-link" href="${pageContext.request.contextPath}/admin/cabinet">cabinet</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/admin/news/0">news</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/admin/news?page=0">news</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link"
-                           href="${pageContext.request.contextPath}/admin/orders/0">Orders</a>
+                           href="${pageContext.request.contextPath}/admin/orders?page=0">Orders</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="${pageContext.request.contextPath}/admin/profile">my profile</a>
@@ -138,14 +138,14 @@
                         <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/cabinet">cabinet</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/users/0">users</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/users?page=0">users</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/news/0">news</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/news?page=0">news</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link"
-                           href="${pageContext.request.contextPath}/superAdmin/orders/0">Orders</a>
+                           href="${pageContext.request.contextPath}/superAdmin/orders?page=0">Orders</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/profile">my profile</a>
@@ -213,7 +213,7 @@
                                 <td style="color: #FFFFFF"><c:out value="${book.bookQuantity}"/></td>
                                 <security:authorize access="hasAuthority('ADMIN')">
                                     <td><c:choose>
-                                        <c:when test="${book.changable eq viewDTO.viewMap['CHANGABLE']}">
+                                        <c:when test="${book.changable == 'CHANGABLE'}">
                                             <spring:url value="/admin/changeBook/${book.bookId}" var="changeBook"/>
                                             <button style="background-color: #e13612" class="btn btn-info"
                                                     onclick="location.href='${changeBook}'">Change book

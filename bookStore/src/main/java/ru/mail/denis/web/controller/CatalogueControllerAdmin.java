@@ -39,17 +39,17 @@ public class CatalogueControllerAdmin {
         bookValidator.validate(bookDTO, bindingResult);
         if (!bindingResult.hasErrors()) {
             catalogueService.saveBook(bookDTO);
-            return "redirect:/admin/catalogue/0";
+            return "redirect:/admin/catalogue?page=0";
         } else {
             return "admin/addBook";
         }
     }
 
     @RequestMapping(value = "/changeBook/{bookId}", method = RequestMethod.GET)
-    public String changeBookAdmin(@PathVariable int bookId, Model model) {
+    public String changeBookAdmin(@PathVariable Integer bookId, Model model) {
         BookDTO bookDTO = catalogueService.getBookById(bookId);
         if (bookDTO.getChangable() != Changable.CHANGABLE) {
-            return "redirect:/admin/catalogue/0";
+            return "redirect:/admin/catalogue?page=0";
         }
         model.addAttribute("book", bookDTO);
         return "admin/changeBook";
@@ -61,27 +61,27 @@ public class CatalogueControllerAdmin {
         bookValidator.validate(bookDTO, bindingResult);
         if (!bindingResult.hasErrors()) {
             catalogueService.updateBook(bookDTO);
-            return "redirect:/admin/catalogue/0";
+            return "redirect:/admin/catalogue?page=0";
         } else {
             return "admin/changeBook";
         }
     }
 
     @RequestMapping(value = "/copyBook/{bookId}", method = RequestMethod.GET)
-    public String copyBook(@PathVariable int bookId, Model model) {
+    public String copyBook(@PathVariable Integer bookId, Model model) {
         BookDTO bookDTO = catalogueService.getBookById(bookId);
         model.addAttribute("book", bookDTO);
         return "admin/copyBook";
     }
 
     @RequestMapping(value = "/deleteBook/{bookId}", method = RequestMethod.GET)
-    public String adminDeleteBook(@PathVariable int bookId) {
+    public String adminDeleteBook(@PathVariable Integer bookId) {
         BookDTO bookDTO = catalogueService.getBookById(bookId);
         if (bookDTO.getChangable() != Changable.CHANGABLE) {
-            return "redirect:/admin/catalogue/0";
+            return "redirect:/admin/catalogue?page=0";
         }
         catalogueService.deleteBook(bookId);
-        return "redirect:/admin/catalogue/0";
+        return "redirect:/admin/catalogue?page=0";
     }
 
 

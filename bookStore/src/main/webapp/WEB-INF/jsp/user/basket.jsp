@@ -81,10 +81,10 @@
                     <a class="nav-link" href="${pageContext.request.contextPath}/user/cabinet">cabinet</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="${pageContext.request.contextPath}/user/news/0">news</a>
+                    <a class="nav-link" href="${pageContext.request.contextPath}/user/news?page=0">news</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="${pageContext.request.contextPath}/user/catalogue/0">catalogue</a>
+                    <a class="nav-link" href="${pageContext.request.contextPath}/user/catalogue?page=0">catalogue</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="${pageContext.request.contextPath}/user/profile">my profile</a>

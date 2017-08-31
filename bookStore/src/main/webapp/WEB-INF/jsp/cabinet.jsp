@@ -99,7 +99,7 @@
                         <a class="nav-link" href="${pageContext.request.contextPath}/admin/profile">my profile</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/admin/orders/0">Orders</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/admin/orders?page=0">Orders</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="${pageContext.request.contextPath}/logout">logout</a>
@@ -111,7 +111,7 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link"
-                           href="${pageContext.request.contextPath}/superAdmin/users/0">users</a>
+                           href="${pageContext.request.contextPath}/superAdmin/users?page=0">users</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link"
@@ -127,7 +127,7 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link"
-                           href="${pageContext.request.contextPath}/superAdmin/orders/0">Orders</a>
+                           href="${pageContext.request.contextPath}/superAdmin/orders?page=0">Orders</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="${pageContext.request.contextPath}/logout">logout</a>

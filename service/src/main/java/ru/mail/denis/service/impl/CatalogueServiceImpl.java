@@ -36,6 +36,7 @@ public class CatalogueServiceImpl implements CatalogueService {
    @Transactional
     public ViewDTO viewPage(Integer page, String orderId){
         int total=7;
+        int pageNumber = 0;
         if (page != 0) {
             page = page * total;
         }
@@ -52,6 +53,8 @@ public class CatalogueServiceImpl implements CatalogueService {
             pagination.add(i);
         }
         Map<String,Object> map=new HashMap<>();
+        map.put("page",pageNumber);
+        map.put("orderId",orderId);
         map.put("catalogue",bookDTOS);
         map.put("pagination",pagination);
         ViewDTO viewDTO=new ViewDTO();

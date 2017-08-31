@@ -94,11 +94,11 @@
                         <a class="nav-link" href="${pageContext.request.contextPath}/admin/cabinet">Cabinet</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/admin/news/0">news</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/admin/news?page=0">news</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link"
-                           href="${pageContext.request.contextPath}/admin/catalogue/0">catalogue</a>
+                           href="${pageContext.request.contextPath}/admin/catalogue?page=0">catalogue</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="${pageContext.request.contextPath}/admin/profile">my profile</a>
@@ -112,14 +112,14 @@
                         <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/cabinet">Cabinet</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/users/0">users</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/users?page=0">users</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/news/0">news</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/news?page=0">news</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link"
-                           href="${pageContext.request.contextPath}/superAdmin/catalogue/0">catalogue</a>
+                           href="${pageContext.request.contextPath}/superAdmin/catalogue?page=0">catalogue</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="${pageContext.request.contextPath}/superAdmin/profile">my profile</a>
@@ -154,7 +154,8 @@
                                     <td style="color: #FFFFFF"><c:out value="${message.messageText}"/></td>
                                     <td>
                                         <security:authorize access="hasAuthority('ADMIN')">
-                                            <form action="/admin/messages/${page}" method="get">
+                                            <form action="/admin/messages" method="get">
+                                                <input type="hidden" name="page" value="${viewDTO.viewMap['page']}">
                                                 <input type="hidden" name="userEmail" value="${message.authorEmail}">
                                                 <input type="hidden" name="messageId" value="${message.messageId}">
                                                 <input name="showDetails" value="show info" type="submit"
@@ -162,7 +163,8 @@
                                             </form>
                                         </security:authorize>
                                         <security:authorize access="hasAuthority('SUPER_ADMIN')">
-                                            <form action="/superAdmin/messages/${page}" method="get">
+                                            <form action="/superAdmin/messages" method="get">
+                                                <input type="hidden" name="page" value="${viewDTO.viewMap['page']}">
                                                 <input type="hidden" name="userEmail" value="${message.authorEmail}">
                                                 <input type="hidden" name="messageId" value="${message.messageId}">
                                                 <input name="showDetails" value="show info" type="submit"

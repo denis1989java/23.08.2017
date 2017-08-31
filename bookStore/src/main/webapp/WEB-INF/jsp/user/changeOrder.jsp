@@ -76,13 +76,13 @@
         <div class="collapse navbar-collapse" id="navbarExample">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="${pageContext.request.contextPath}/user/news/0">news</a>
+                    <a class="nav-link" href="${pageContext.request.contextPath}/user/news?page=0">news</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="${pageContext.request.contextPath}/user/cabinet">cabinet</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="${pageContext.request.contextPath}/user/catalogue/0">catalogue</a>
+                    <a class="nav-link" href="${pageContext.request.contextPath}/user/catalogue?page=0">catalogue</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="${pageContext.request.contextPath}/user/profile">my profile</a>
@@ -183,8 +183,8 @@
                                     </th>
                                 </tr>
                             </table>
-                            <form action="/user/order/addToOrder/0" method="get">
-                                <input type="hidden" name="orderId" value="${viewDTO.viewMap['orderDTO'].orderId}">
+                            <form action="/user/order/addToOrder/${viewDTO.viewMap['orderDTO'].orderId}" method="get">
+                                <input type="hidden" name="page" value="0">
                                 <input value="Add to order" type="submit" style="text-align:left">
                             </form>
                             <form action="/user/order/delete" method="post">
